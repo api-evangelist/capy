@@ -1,0 +1,25 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/capy-openapi-original.json
+docs: https://docs.capy.ai/api-reference/overview
+summary:
+  types:
+  - http
+  http_schemes:
+  - bearer
+  token_format: capy_xxxx
+  header: 'Authorization: Bearer [example key]'
+  token_management: https://capy.ai/settings/tokens
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: API token (capy_xxxx). Generate at capy.ai/settings/tokens
+  token_prefix: capy_
+  sources:
+  - openapi/capy-openapi-original.json
+notes:
+- Session identity tokens (verifySession / getThreadSessionToken) are a separate,
+  short-lived token issued per captain session and written inside the VM at
+  /etc/capy/session-token (mode 0600); they are not API auth credentials but let
+  code prove a request came from a genuine Capy session.
