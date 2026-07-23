@@ -1,0 +1,154 @@
+openapi: 3.1.0
+info:
+  title: Capy automations models API
+  version: 1.0.0
+servers:
+- url: https://capy.ai/api
+security:
+- bearerAuth: []
+tags:
+- name: models
+paths:
+  /v1/models:
+    get:
+      operationId: listModels
+      summary: List models
+      description: List models available to the API.
+      tags:
+      - models
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListModelsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    ListModelsResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        models:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                enum:
+                - claude-fable-5
+                - claude-sonnet-5
+                - claude-opus-4-8
+                - claude-opus-4-7
+                - claude-opus-4-6
+                - claude-opus-4-5
+                - claude-sonnet-4-6
+                - claude-haiku-4-5
+                - gpt-5.6-sol
+                - gpt-5.6-terra
+                - gpt-5.6-luna
+                - gpt-5.5
+                - gpt-5.5-pro
+                - gpt-5.4
+                - gpt-5.4-mini
+                - gpt-5.3-codex
+                - gpt-5.3-codex-spark
+                - gemini-3.1-pro-preview
+                - gemini-3-flash-preview
+                - grok-4-1-fast
+                - grok-4-5
+                - composer-2.5-fast
+                - glm-5.2
+                - glm-5.1
+                - glm-5v-turbo
+                - deepseek-v4-pro
+                - glm-5-turbo
+                - glm-4.7
+                - kimi-k3
+                - kimi-k2.7-code
+                - kimi-k2.6
+                - qwen3-coder
+              name:
+                type: string
+              provider:
+                type: string
+              captainEligible:
+                type: boolean
+            required:
+            - id
+            - name
+            - provider
+            - captainEligible
+            additionalProperties: false
+      required:
+      - models
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API token (capy_xxxx). Generate at capy.ai/settings/tokens

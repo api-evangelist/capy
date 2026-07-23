@@ -1,0 +1,1363 @@
+openapi: 3.1.0
+info:
+  title: Capy automations threads API
+  version: 1.0.0
+servers:
+- url: https://capy.ai/api
+security:
+- bearerAuth: []
+tags:
+- name: threads
+paths:
+  /v1/threads:
+    get:
+      operationId: listThreads
+      summary: List threads
+      description: List captain threads for a project.
+      tags:
+      - threads
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          default: 20
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: projectId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - active
+          - idle
+          - archived
+      - name: prNumber
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+      - name: branch
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: slackThreadTs
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: authorId
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 1
+          description: Filter to threads created by this Capy user ID. Mutually exclusive with authorEmail.
+      - name: authorEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Filter to threads created by the organization member with this email address. Returns an empty page if the email does not match an organization member. Mutually exclusive with authorId.
+      - name: participantId
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 1
+          description: Filter to threads this Capy user ID authored or participated in. Mutually exclusive with participantEmail.
+      - name: participantEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Filter to threads the organization member with this email address authored or participated in. Returns an empty page if the email does not match an organization member. Mutually exclusive with participantId.
+      - name: origin
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - web
+          - slack
+          - api
+          - linear
+          - automation
+          - github
+          description: Filter by thread origin source.
+      - name: prState
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - open
+          - merged
+          - closed
+          - none
+          description: Filter by the thread's rolled-up pull request state. Combines with prNumber and branch.
+      - name: tag
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 1
+          description: Filter to threads with this tag name (lowercase).
+      - name: slackChannelId
+        in: query
+        required: false
+        schema:
+          type: string
+          minLength: 1
+          description: Filter to threads linked to this Slack channel ID (e.g. C0123456789). Combines with slackThreadTs.
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Free-text search across thread titles and content.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListThreadsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      operationId: createAndStartThread
+      summary: Create and start thread
+      description: Create a new captain thread and immediately start execution, optionally assigning existing project tags.
+      tags:
+      - threads
+      security:
+      - bearerAuth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateThreadBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateThreadResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/threads/{threadId}:
+    get:
+      operationId: getThread
+      summary: Get thread
+      description: Get a single captain thread.
+      tags:
+      - threads
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: threadId
+        in: path
+        required: true
+        description: Thread jam ID.
+        schema:
+          type: string
+        example: jam_123
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadListItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/threads/{threadId}/stop:
+    post:
+      operationId: stopThread
+      summary: Stop thread
+      description: Stop an actively running captain thread.
+      tags:
+      - threads
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: threadId
+        in: path
+        required: true
+        description: Thread jam ID.
+        schema:
+          type: string
+        example: jam_123
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopThreadResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/threads/{threadId}/archive:
+    post:
+      operationId: archiveThread
+      summary: Archive thread
+      description: Archive a captain thread. If the thread is actively running, the archive succeeds first and then the API attempts to stop the active run on a best-effort basis.
+      tags:
+      - threads
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: threadId
+        in: path
+        required: true
+        description: Thread jam ID.
+        schema:
+          type: string
+        example: jam_123
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArchiveThreadBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchiveThreadResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/threads/{threadId}/unarchive:
+    post:
+      operationId: unarchiveThread
+      summary: Unarchive thread
+      description: Unarchive a captain thread. This does not restart or resume execution.
+      tags:
+      - threads
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: threadId
+        in: path
+        required: true
+        description: Thread jam ID.
+        schema:
+          type: string
+        example: jam_123
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnarchiveThreadBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchiveThreadResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/threads/{threadId}/session-token:
+    get:
+      operationId: getThreadSessionToken
+      summary: Get session token
+      description: Fetch the current session identity token for a captain thread. The caller must have access to the project that owns the thread. The same token is also written inside the captain VM to `/etc/capy/session-token` with permissions `0600`, so code running inside the VM can read it locally. A `410` response means the session has already ended. A `422` response with code `session_not_ready` means the token has not been minted yet during initial bootstrap; retry with backoff.
+      tags:
+      - threads
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: threadId
+        in: path
+        required: true
+        description: Thread jam ID.
+        schema:
+          type: string
+        example: jam_123
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionTokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/threads/{threadId}/message:
+    post:
+      operationId: sendThreadMessage
+      summary: Send thread message
+      description: Send a message to an existing thread.
+      tags:
+      - threads
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: threadId
+        in: path
+        required: true
+        description: Thread jam ID.
+        schema:
+          type: string
+        example: jam_123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendThreadMessageBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendMessageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/threads/{threadId}/messages:
+    get:
+      operationId: listThreadMessages
+      summary: List thread messages
+      description: List messages in a captain thread.
+      tags:
+      - threads
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: threadId
+        in: path
+        required: true
+        description: Thread jam ID.
+        schema:
+          type: string
+        example: jam_123
+      - name: limit
+        in: query
+        required: false
+        schema:
+          default: 50
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMessagesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    StopThreadResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - idle
+          - archived
+      required:
+      - id
+      - status
+      additionalProperties: false
+    SendThreadMessageBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        impersonateUserEmail:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+        messageId:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[\x21-\x7e]+$
+        message:
+          type: string
+          minLength: 1
+        mode:
+          type: string
+          enum:
+          - interrupt
+          - queue
+        model:
+          type: string
+          enum:
+          - claude-fable-5
+          - claude-sonnet-5
+          - claude-opus-4-8
+          - claude-opus-4-7
+          - claude-opus-4-6
+          - claude-opus-4-5
+          - claude-sonnet-4-6
+          - claude-haiku-4-5
+          - gpt-5.6-sol
+          - gpt-5.6-terra
+          - gpt-5.6-luna
+          - gpt-5.5
+          - gpt-5.5-pro
+          - gpt-5.4
+          - gpt-5.4-mini
+          - gpt-5.3-codex
+          - gpt-5.3-codex-spark
+          - gemini-3.1-pro-preview
+          - gemini-3-flash-preview
+          - grok-4-1-fast
+          - grok-4-5
+          - composer-2.5-fast
+          - glm-5.2
+          - glm-5.1
+          - glm-5v-turbo
+          - deepseek-v4-pro
+          - glm-5-turbo
+          - glm-4.7
+          - kimi-k3
+          - kimi-k2.7-code
+          - kimi-k2.6
+          - qwen3-coder
+        speed:
+          type: string
+          enum:
+          - fast
+          - standard
+        reasoning:
+          type: object
+          properties:
+            mode:
+              type: string
+              enum:
+              - 'off'
+              - 'on'
+              - none
+              - minimal
+              - low
+              - medium
+              - high
+              - xhigh
+              - max
+          required:
+          - mode
+          additionalProperties: false
+        buildModel:
+          type: string
+          enum:
+          - claude-fable-5
+          - claude-sonnet-5
+          - claude-opus-4-8
+          - claude-opus-4-7
+          - claude-opus-4-6
+          - claude-opus-4-5
+          - claude-sonnet-4-6
+          - claude-haiku-4-5
+          - gpt-5.6-sol
+          - gpt-5.6-terra
+          - gpt-5.6-luna
+          - gpt-5.5
+          - gpt-5.5-pro
+          - gpt-5.4
+          - gpt-5.4-mini
+          - gpt-5.3-codex
+          - gpt-5.3-codex-spark
+          - gemini-3.1-pro-preview
+          - gemini-3-flash-preview
+          - grok-4-1-fast
+          - grok-4-5
+          - composer-2.5-fast
+          - glm-5.2
+          - glm-5.1
+          - glm-5v-turbo
+          - deepseek-v4-pro
+          - glm-5-turbo
+          - glm-4.7
+          - kimi-k3
+          - kimi-k2.7-code
+          - kimi-k2.6
+          - qwen3-coder
+        buildSpeed:
+          type: string
+          enum:
+          - fast
+          - standard
+        buildReasoning:
+          type: object
+          properties:
+            mode:
+              type: string
+              enum:
+              - 'off'
+              - 'on'
+              - none
+              - minimal
+              - low
+              - medium
+              - high
+              - xhigh
+              - max
+          required:
+          - mode
+          additionalProperties: false
+        browserSnapshotIds:
+          type: array
+          items:
+            type: string
+        attachmentUrls:
+          maxItems: 10
+          type: array
+          items:
+            type: string
+            format: uri
+      required:
+      - message
+      additionalProperties: false
+    ListThreadsResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThreadListItem'
+        nextCursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+        hasMore:
+          type: boolean
+      required:
+      - items
+      - nextCursor
+      - hasMore
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
+    UnarchiveThreadBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        impersonateUserEmail:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+      additionalProperties: false
+    ArchiveThreadResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - idle
+          - archived
+      required:
+      - id
+      - status
+      additionalProperties: false
+    SessionTokenResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        token:
+          type: string
+          description: Opaque session identity token. This value is a JWT and is typically 700-1000 bytes long.
+        expiresAt:
+          type: string
+          format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+        issuedAt:
+          type: string
+          format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
+      required:
+      - token
+      - expiresAt
+      - issuedAt
+      additionalProperties: false
+    ListMessagesResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              source:
+                type: string
+                enum:
+                - user
+                - assistant
+              content:
+                type: string
+              createdAt:
+                type: string
+            required:
+            - id
+            - source
+            - content
+            - createdAt
+            additionalProperties: false
+        nextCursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+        hasMore:
+          type: boolean
+      required:
+      - items
+      - nextCursor
+      - hasMore
+      additionalProperties: false
+    ThreadListItem:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - active
+          - idle
+          - archived
+          description: Coarse Captain run-loop status retained for compatibility. Prefer runState/waitingOn/blockedOn for completion and waiting UX.
+        runState:
+          type: string
+          enum:
+          - running
+          - stopping
+          - queued
+          - waiting
+          - blocked
+          - ready
+          - archived
+          description: Full computed execution state for the agent thread.
+        waitingOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - task
+            - review
+            - ci
+            - timer
+            - worker
+          description: Async system dependencies expected to continue without user action.
+        blockedOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - auth
+            - permission
+          description: User/integration gates required before progress can continue.
+        pendingWakeups:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+          description: Pending append-and-resume notifications waiting to be processed.
+        tasks:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              threadIndex:
+                anyOf:
+                - type: integer
+                  minimum: -9007199254740991
+                  maximum: 9007199254740991
+                - type: 'null'
+              identifier:
+                type: string
+              title:
+                type: string
+              status:
+                type: string
+                enum:
+                - backlog
+                - queued
+                - in_progress
+                - needs_review
+                - completed
+                - error
+                - archived
+            required:
+            - id
+            - threadIndex
+            - identifier
+            - title
+            - status
+            additionalProperties: false
+        participants:
+          type: array
+          items:
+            type: object
+            properties:
+              userId:
+                type: string
+              userType:
+                type: string
+                enum:
+                - human
+                - service_user
+              firstParticipatedAt:
+                type: string
+              lastParticipatedAt:
+                type: string
+            required:
+            - userId
+            - userType
+            - firstParticipatedAt
+            - lastParticipatedAt
+            additionalProperties: false
+        pullRequests:
+          type: array
+          items:
+            type: object
+            properties:
+              number:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              url:
+                type: string
+              repoFullName:
+                type: string
+              state:
+                type: string
+              headRef:
+                type: string
+              baseRef:
+                type: string
+              draft:
+                type: boolean
+            required:
+            - number
+            - url
+            - repoFullName
+            - state
+            - headRef
+            - baseRef
+            - draft
+            additionalProperties: false
+        slackThreads:
+          type: array
+          items:
+            type: object
+            properties:
+              teamId:
+                type: string
+              channelId:
+                type: string
+              threadTs:
+                type: string
+              url:
+                type: string
+            required:
+            - teamId
+            - channelId
+            - threadTs
+            - url
+            additionalProperties: false
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              color:
+                type: string
+                enum:
+                - default
+                - primary
+                - success
+                - warning
+                - destructive
+                - blue
+                - purple
+                - pink
+                - orange
+                - lime
+            required:
+            - name
+            - color
+            additionalProperties: false
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+      - id
+      - projectId
+      - title
+      - status
+      - runState
+      - waitingOn
+      - blockedOn
+      - pendingWakeups
+      - tasks
+      - participants
+      - pullRequests
+      - slackThreads
+      - tags
+      - createdAt
+      - updatedAt
+      additionalProperties: false
+    ArchiveThreadBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        impersonateUserEmail:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+      additionalProperties: false
+    CreateThreadResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - active
+          - idle
+          - archived
+          description: Coarse Captain run-loop status retained for compatibility. Prefer runState/waitingOn/blockedOn for completion and waiting UX.
+        runState:
+          type: string
+          enum:
+          - running
+          - stopping
+          - queued
+          - waiting
+          - blocked
+          - ready
+          - archived
+          description: Full computed execution state for the agent thread.
+        waitingOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - task
+            - review
+            - ci
+            - timer
+            - worker
+          description: Async system dependencies expected to continue without user action.
+        blockedOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - auth
+            - permission
+          description: User/integration gates required before progress can continue.
+        pendingWakeups:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+          description: Pending append-and-resume notifications waiting to be processed.
+        participants:
+          type: array
+          items:
+            type: object
+            properties:
+              userId:
+                type: string
+              userType:
+                type: string
+                enum:
+                - human
+                - service_user
+              firstParticipatedAt:
+                type: string
+              lastParticipatedAt:
+                type: string
+            required:
+            - userId
+            - userType
+            - firstParticipatedAt
+            - lastParticipatedAt
+            additionalProperties: false
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 64
+                pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+              color:
+                type: string
+                enum:
+                - default
+                - primary
+                - success
+                - warning
+                - destructive
+                - blue
+                - purple
+                - pink
+                - orange
+                - lime
+            required:
+            - name
+            - color
+            additionalProperties: false
+        slack:
+          type: object
+          properties:
+            teamId:
+              type: string
+            channelId:
+              type: string
+            threadTs:
+              type: string
+            url:
+              type: string
+          required:
+          - teamId
+          - channelId
+          - threadTs
+          - url
+          additionalProperties: false
+        createdAt:
+          type: string
+      required:
+      - id
+      - projectId
+      - title
+      - status
+      - runState
+      - waitingOn
+      - blockedOn
+      - pendingWakeups
+      - participants
+      - tags
+      - createdAt
+      additionalProperties: false
+    SendMessageResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - sent
+          - queued
+          - pending
+        inputEventId:
+          type: string
+        timelineSequence:
+          type: string
+          pattern: ^(0|[1-9]\d*)$
+        appendState:
+          type: string
+          enum:
+          - inserted
+          - already_present
+      required:
+      - id
+      - status
+      additionalProperties: false
+    CreateThreadBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        projectId:
+          type: string
+        impersonateUserEmail:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+        prompt:
+          type: string
+          minLength: 1
+        model:
+          type: string
+          enum:
+          - claude-fable-5
+          - claude-sonnet-5
+          - claude-opus-4-8
+          - claude-opus-4-7
+          - claude-opus-4-6
+          - claude-opus-4-5
+          - claude-sonnet-4-6
+          - claude-haiku-4-5
+          - gpt-5.6-sol
+          - gpt-5.6-terra
+          - gpt-5.6-luna
+          - gpt-5.5
+          - gpt-5.5-pro
+          - gpt-5.4
+          - gpt-5.4-mini
+          - gpt-5.3-codex
+          - gpt-5.3-codex-spark
+          - gemini-3.1-pro-preview
+          - gemini-3-flash-preview
+          - grok-4-1-fast
+          - grok-4-5
+          - composer-2.5-fast
+          - glm-5.2
+          - glm-5.1
+          - glm-5v-turbo
+          - deepseek-v4-pro
+          - glm-5-turbo
+          - glm-4.7
+          - kimi-k3
+          - kimi-k2.7-code
+          - kimi-k2.6
+          - qwen3-coder
+        speed:
+          type: string
+          enum:
+          - fast
+          - standard
+        reasoning:
+          type: object
+          properties:
+            mode:
+              type: string
+              enum:
+              - 'off'
+              - 'on'
+              - none
+              - minimal
+              - low
+              - medium
+              - high
+              - xhigh
+              - max
+          required:
+          - mode
+          additionalProperties: false
+        buildModel:
+          type: string
+          enum:
+          - claude-fable-5
+          - claude-sonnet-5
+          - claude-opus-4-8
+          - claude-opus-4-7
+          - claude-opus-4-6
+          - claude-opus-4-5
+          - claude-sonnet-4-6
+          - claude-haiku-4-5
+          - gpt-5.6-sol
+          - gpt-5.6-terra
+          - gpt-5.6-luna
+          - gpt-5.5
+          - gpt-5.5-pro
+          - gpt-5.4
+          - gpt-5.4-mini
+          - gpt-5.3-codex
+          - gpt-5.3-codex-spark
+          - gemini-3.1-pro-preview
+          - gemini-3-flash-preview
+          - grok-4-1-fast
+          - grok-4-5
+          - composer-2.5-fast
+          - glm-5.2
+          - glm-5.1
+          - glm-5v-turbo
+          - deepseek-v4-pro
+          - glm-5-turbo
+          - glm-4.7
+          - kimi-k3
+          - kimi-k2.7-code
+          - kimi-k2.6
+          - qwen3-coder
+        buildSpeed:
+          type: string
+          enum:
+          - fast
+          - standard
+        buildReasoning:
+          type: object
+          properties:
+            mode:
+              type: string
+              enum:
+              - 'off'
+              - 'on'
+              - none
+              - minimal
+              - low
+              - medium
+              - high
+              - xhigh
+              - max
+          required:
+          - mode
+          additionalProperties: false
+        repos:
+          type: array
+          items:
+            type: object
+            properties:
+              repoFullName:
+                type: string
+              branch:
+                type: string
+            required:
+            - repoFullName
+            - branch
+            additionalProperties: false
+        browserSnapshotIds:
+          type: array
+          items:
+            type: string
+        attachmentUrls:
+          maxItems: 10
+          type: array
+          items:
+            type: string
+            format: uri
+        tags:
+          maxItems: 20
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+        slack:
+          type: object
+          properties:
+            channel:
+              type: string
+              minLength: 1
+          required:
+          - channel
+          additionalProperties: false
+        reliabilityInvestigationId:
+          type: string
+          pattern: ^rel_[a-f0-9]{40}$
+      required:
+      - projectId
+      - prompt
+      additionalProperties: false
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Gone:
+      description: Gone
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: session_ended
+              message: Session has already ended
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    TooManyRequests:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API token (capy_xxxx). Generate at capy.ai/settings/tokens

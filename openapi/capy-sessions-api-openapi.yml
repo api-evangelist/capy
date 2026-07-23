@@ -1,0 +1,160 @@
+openapi: 3.1.0
+info:
+  title: Capy automations sessions API
+  version: 1.0.0
+servers:
+- url: https://capy.ai/api
+security:
+- bearerAuth: []
+tags:
+- name: sessions
+paths:
+  /v1/sessions/verify:
+    post:
+      operationId: verifySession
+      summary: Verify session token
+      description: 'Verify a session identity token issued for a captain session. The caller must have access to the project that owns the session so the endpoint cannot be used for cross-tenant enumeration. Failure responses are intentionally opaque: only `expired` is distinguished from `invalid`, and callers should always confirm the returned `projectId` matches the project they expect before trusting the result.'
+      tags:
+      - sessions
+      security:
+      - bearerAuth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifySessionBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifySessionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    VerifySessionBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 1
+          maxLength: 8192
+      required:
+      - token
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
+    VerifySessionResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      oneOf:
+      - type: object
+        properties:
+          valid:
+            type: boolean
+            const: true
+          threadId:
+            type: string
+          projectId:
+            type: string
+          orgId:
+            anyOf:
+            - type: string
+            - type: 'null'
+          userId:
+            type: string
+          instanceId:
+            type: string
+          issuedAt:
+            type: string
+          expiresAt:
+            type: string
+        required:
+        - valid
+        - threadId
+        - projectId
+        - orgId
+        - userId
+        - instanceId
+        - issuedAt
+        - expiresAt
+        additionalProperties: false
+      - type: object
+        properties:
+          valid:
+            type: boolean
+            const: false
+          reason:
+            type: string
+            enum:
+            - invalid
+            - expired
+        required:
+        - valid
+        - reason
+        additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API token (capy_xxxx). Generate at capy.ai/settings/tokens

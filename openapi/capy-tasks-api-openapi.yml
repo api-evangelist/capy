@@ -1,0 +1,285 @@
+openapi: 3.1.0
+info:
+  title: Capy automations tasks API
+  version: 1.0.0
+servers:
+- url: https://capy.ai/api
+security:
+- bearerAuth: []
+tags:
+- name: tasks
+paths:
+  /v1/tasks/{taskId}:
+    get:
+      operationId: getTask
+      summary: Get task
+      description: Get a task by UUID.
+      tags:
+      - tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: Task UUID.
+        schema:
+          type: string
+          format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/tasks/{taskId}/diff:
+    get:
+      operationId: getTaskDiff
+      summary: Get task diff
+      description: Get the current diff for a task by UUID.
+      tags:
+      - tasks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: Task UUID.
+        schema:
+          type: string
+          format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000
+      - name: mode
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - uncommitted
+          - pr
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDiffResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    Task:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        threadIndex:
+          anyOf:
+          - type: integer
+            minimum: -9007199254740991
+            maximum: 9007199254740991
+          - type: 'null'
+        identifier:
+          type: string
+        title:
+          type: string
+        prompt:
+          type: string
+        status:
+          type: string
+          enum:
+          - backlog
+          - queued
+          - in_progress
+          - needs_review
+          - completed
+          - error
+          - archived
+        pullRequest:
+          type: 'null'
+        slackThreads:
+          type: array
+          items:
+            type: object
+            properties:
+              teamId:
+                type: string
+              channelId:
+                type: string
+              threadTs:
+                type: string
+              url:
+                type: string
+            required:
+            - teamId
+            - channelId
+            - threadTs
+            - url
+            additionalProperties: false
+        currentJamId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        threadId:
+          anyOf:
+          - type: string
+          - type: 'null'
+      required:
+      - id
+      - projectId
+      - threadIndex
+      - identifier
+      - title
+      - prompt
+      - status
+      - pullRequest
+      - slackThreads
+      - currentJamId
+      - createdAt
+      - updatedAt
+      - threadId
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
+    TaskDiffResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        stats:
+          type: object
+          properties:
+            files:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            additions:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            deletions:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+          required:
+          - files
+          - additions
+          - deletions
+          additionalProperties: false
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              state:
+                type: string
+              additions:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              deletions:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              patch:
+                type: string
+            required:
+            - path
+            - state
+            - additions
+            - deletions
+            - patch
+            additionalProperties: false
+        source:
+          type: string
+          enum:
+          - snapshot
+          - github
+          - summary
+      required:
+      - stats
+      - files
+      - source
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API token (capy_xxxx). Generate at capy.ai/settings/tokens

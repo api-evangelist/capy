@@ -1,0 +1,316 @@
+openapi: 3.1.0
+info:
+  title: Capy automations tags API
+  version: 1.0.0
+servers:
+- url: https://capy.ai/api
+security:
+- bearerAuth: []
+tags:
+- name: tags
+paths:
+  /v1/threads/{threadId}/tags:
+    put:
+      operationId: setThreadTags
+      summary: Set thread tags
+      description: Replace the tags assigned to a captain thread. Every tag must already be defined for the project's organization.
+      tags:
+      - tags
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: threadId
+        in: path
+        required: true
+        description: Thread jam ID.
+        schema:
+          type: string
+        example: jam_123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetThreadTagsBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetThreadTagsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/projects/{projectId}/tags:
+    get:
+      operationId: listThreadTags
+      summary: List tags
+      description: List reusable captain-thread tags defined for the project's organization.
+      tags:
+      - tags
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListThreadTagsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      operationId: createThreadTag
+      summary: Create tag
+      description: Create a reusable captain-thread tag for the project's organization. Reusing an existing tag name restores it and updates its color.
+      tags:
+      - tags
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateThreadTagBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadTag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    SetThreadTagsBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        tags:
+          maxItems: 20
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+      required:
+      - tags
+      additionalProperties: false
+    ListThreadTagsResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 64
+                pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+              color:
+                type: string
+                enum:
+                - default
+                - primary
+                - success
+                - warning
+                - destructive
+                - blue
+                - purple
+                - pink
+                - orange
+                - lime
+            required:
+            - name
+            - color
+            additionalProperties: false
+      required:
+      - items
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
+    SetThreadTagsResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 64
+                pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+              color:
+                type: string
+                enum:
+                - default
+                - primary
+                - success
+                - warning
+                - destructive
+                - blue
+                - purple
+                - pink
+                - orange
+                - lime
+            required:
+            - name
+            - color
+            additionalProperties: false
+      required:
+      - tags
+      additionalProperties: false
+    ThreadTag:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+        color:
+          type: string
+          enum:
+          - default
+          - primary
+          - success
+          - warning
+          - destructive
+          - blue
+          - purple
+          - pink
+          - orange
+          - lime
+      required:
+      - name
+      - color
+      additionalProperties: false
+    CreateThreadTagBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+        color:
+          type: string
+          enum:
+          - default
+          - primary
+          - success
+          - warning
+          - destructive
+          - blue
+          - purple
+          - pink
+          - orange
+          - lime
+      required:
+      - name
+      - color
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API token (capy_xxxx). Generate at capy.ai/settings/tokens

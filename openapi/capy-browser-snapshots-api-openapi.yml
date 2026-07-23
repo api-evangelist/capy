@@ -1,0 +1,514 @@
+openapi: 3.1.0
+info:
+  title: Capy automations browser-snapshots API
+  version: 1.0.0
+servers:
+- url: https://capy.ai/api
+security:
+- bearerAuth: []
+tags:
+- name: browser-snapshots
+paths:
+  /v1/projects/{projectId}/browser-snapshots:
+    get:
+      operationId: listBrowserSnapshots
+      summary: List browser snapshots
+      description: List browser snapshots for a project. Private snapshots are only visible to their creator.
+      tags:
+      - browser-snapshots
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBrowserSnapshotsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      operationId: createBrowserSnapshot
+      summary: Create browser snapshot
+      description: Create a new browser snapshot with cookies and localStorage state. Domains are automatically extracted from cookie domains.
+      tags:
+      - browser-snapshots
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBrowserSnapshotBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrowserSnapshotDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/projects/{projectId}/browser-snapshots/{snapshotId}:
+    get:
+      operationId: getBrowserSnapshot
+      summary: Get browser snapshot
+      description: Get a browser snapshot by ID including its full storage state.
+      tags:
+      - browser-snapshots
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: snapshotId
+        in: path
+        required: true
+        description: Browser snapshot ID.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrowserSnapshotDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    patch:
+      operationId: updateBrowserSnapshot
+      summary: Update browser snapshot
+      description: Update browser snapshot metadata. Only the snapshot creator can change the isPrivate flag.
+      tags:
+      - browser-snapshots
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: snapshotId
+        in: path
+        required: true
+        description: Browser snapshot ID.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBrowserSnapshotBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrowserSnapshotDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deleteBrowserSnapshot
+      summary: Delete browser snapshot
+      description: Delete a browser snapshot.
+      tags:
+      - browser-snapshots
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: snapshotId
+        in: path
+        required: true
+        description: Browser snapshot ID.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteBrowserSnapshotResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    BrowserSnapshotDetail:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        name:
+          type: string
+        domains:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+        isPrivate:
+          type: boolean
+        isDefault:
+          type: boolean
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        storageState:
+          anyOf:
+          - type: object
+            properties:
+              cookies:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
+                    domain:
+                      type: string
+                    path:
+                      type: string
+                    expires:
+                      type: number
+                    httpOnly:
+                      type: boolean
+                    secure:
+                      type: boolean
+                    sameSite:
+                      type: string
+                      enum:
+                      - Strict
+                      - Lax
+                      - None
+                  required:
+                  - name
+                  - value
+                  - domain
+                  - path
+                  - expires
+                  - httpOnly
+                  - secure
+                  - sameSite
+                  additionalProperties: false
+              origins:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    origin:
+                      type: string
+                    localStorage:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - name
+                        - value
+                        additionalProperties: false
+                  required:
+                  - origin
+                  - localStorage
+                  additionalProperties: false
+            required:
+            - cookies
+            - origins
+            additionalProperties: false
+          - type: 'null'
+      required:
+      - id
+      - projectId
+      - name
+      - domains
+      - isPrivate
+      - isDefault
+      - createdAt
+      - updatedAt
+      - storageState
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
+    CreateBrowserSnapshotBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        storageState:
+          type: object
+          properties:
+            cookies:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: string
+                  domain:
+                    type: string
+                  path:
+                    type: string
+                  expires:
+                    type: number
+                  httpOnly:
+                    type: boolean
+                  secure:
+                    type: boolean
+                  sameSite:
+                    type: string
+                    enum:
+                    - Strict
+                    - Lax
+                    - None
+                required:
+                - name
+                - value
+                - domain
+                - path
+                - expires
+                - httpOnly
+                - secure
+                - sameSite
+                additionalProperties: false
+            origins:
+              type: array
+              items:
+                type: object
+                properties:
+                  origin:
+                    type: string
+                  localStorage:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: string
+                      required:
+                      - name
+                      - value
+                      additionalProperties: false
+                required:
+                - origin
+                - localStorage
+                additionalProperties: false
+          required:
+          - cookies
+          - origins
+          additionalProperties: false
+        isPrivate:
+          type: boolean
+        isDefault:
+          type: boolean
+      required:
+      - name
+      - storageState
+      additionalProperties: false
+    ListBrowserSnapshotsResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              projectId:
+                type: string
+              name:
+                type: string
+              domains:
+                anyOf:
+                - type: array
+                  items:
+                    type: string
+                - type: 'null'
+              isPrivate:
+                type: boolean
+              isDefault:
+                type: boolean
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+            required:
+            - id
+            - projectId
+            - name
+            - domains
+            - isPrivate
+            - isDefault
+            - createdAt
+            - updatedAt
+            additionalProperties: false
+      required:
+      - items
+      additionalProperties: false
+    DeleteBrowserSnapshotResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+      - success
+      additionalProperties: false
+    UpdateBrowserSnapshotBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        isPrivate:
+          type: boolean
+        isDefault:
+          type: boolean
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API token (capy_xxxx). Generate at capy.ai/settings/tokens

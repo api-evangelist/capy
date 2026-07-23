@@ -1,0 +1,3805 @@
+openapi: 3.1.0
+info:
+  title: Capy automations API
+  version: 1.0.0
+servers:
+- url: https://capy.ai/api
+security:
+- bearerAuth: []
+tags:
+- name: automations
+paths:
+  /v1/projects/{projectId}/automations:
+    get:
+      operationId: listAutomations
+      summary: List automations
+      description: List project automations visible to the effective actor. Creator-scoped automations are private to their creator. Admin service users may explicitly target a same-organization project member with impersonateUserEmail.
+      tags:
+      - automations
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: impersonateUserEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Admin service users may explicitly act as this same-organization project member. Human and non-admin service-user tokens must omit this parameter.
+      - name: includeDisabled
+        in: query
+        required: false
+        schema:
+          default: 'false'
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      - name: enabled
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      - name: limit
+        in: query
+        required: false
+        schema:
+          default: 20
+          type: integer
+          minimum: 1
+          maximum: 100
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAutomationsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      operationId: createAutomation
+      summary: Create automation
+      description: Create an automation owned by the effective actor. Admin service users may create on behalf of a same-organization project member only with the explicit impersonateUserEmail query parameter.
+      tags:
+      - automations
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: impersonateUserEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Admin service users may explicitly act as this same-organization project member. Human and non-admin service-user tokens must omit this parameter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAutomationBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Automation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/projects/{projectId}/automations/{automationId}:
+    get:
+      operationId: getAutomation
+      summary: Get automation
+      description: Get an automation visible to the effective actor. Creator-scoped automations are private to their creator.
+      tags:
+      - automations
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: automationId
+        in: path
+        required: true
+        description: Automation ID.
+        schema:
+          type: string
+      - name: impersonateUserEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Admin service users may explicitly act as this same-organization project member. Human and non-admin service-user tokens must omit this parameter.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Automation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    patch:
+      operationId: updateAutomation
+      summary: Update automation
+      description: Partially update an automation visible to the effective actor. Creator-private ownership is enforced.
+      tags:
+      - automations
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: automationId
+        in: path
+        required: true
+        description: Automation ID.
+        schema:
+          type: string
+      - name: impersonateUserEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Admin service users may explicitly act as this same-organization project member. Human and non-admin service-user tokens must omit this parameter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAutomationBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Automation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deleteAutomation
+      summary: Delete automation
+      description: Soft-delete an automation visible to the effective actor. Creator-private ownership is enforced.
+      tags:
+      - automations
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: automationId
+        in: path
+        required: true
+        description: Automation ID.
+        schema:
+          type: string
+      - name: impersonateUserEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Admin service users may explicitly act as this same-organization project member. Human and non-admin service-user tokens must omit this parameter.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAutomationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/projects/{projectId}/automations/{automationId}/trigger:
+    post:
+      operationId: triggerAutomation
+      summary: Trigger automation
+      description: Run an automation now as its immutable creator. The caller must be able to view the automation; service tokens never silently inherit a human identity.
+      tags:
+      - automations
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: automationId
+        in: path
+        required: true
+        description: Automation ID.
+        schema:
+          type: string
+      - name: impersonateUserEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Admin service users may explicitly act as this same-organization project member. Human and non-admin service-user tokens must omit this parameter.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriggerAutomationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    ListAutomationsResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              projectId:
+                type: string
+              createdByUserId:
+                type: string
+              name:
+                type: string
+              description:
+                anyOf:
+                - type: string
+                - type: 'null'
+              enabled:
+                type: boolean
+              triggerType:
+                type: string
+                enum:
+                - schedule
+                - webhook
+                - incoming_webhook
+                - on_demand
+                - integration
+              webhookConfig:
+                anyOf:
+                - type: object
+                  properties:
+                    source:
+                      type: string
+                      const: github
+                    events:
+                      minItems: 1
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          event:
+                            type: string
+                          actions:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                        - event
+                        additionalProperties: false
+                    filters:
+                      type: object
+                      properties:
+                        branches:
+                          type: array
+                          items:
+                            type: string
+                      additionalProperties: false
+                  required:
+                  - source
+                  - events
+                  additionalProperties: false
+                - type: 'null'
+              integrationTriggerConfig:
+                anyOf:
+                - {}
+                - type: 'null'
+              cron:
+                anyOf:
+                - type: string
+                - type: 'null'
+              timezone:
+                type: string
+              prompt:
+                type: string
+              model:
+                anyOf:
+                - type: string
+                - type: 'null'
+              buildModel:
+                anyOf:
+                - type: string
+                - type: 'null'
+              baseBranch:
+                anyOf:
+                - type: string
+                - type: 'null'
+              repoBranches:
+                anyOf:
+                - type: object
+                  propertyNames:
+                    type: string
+                  additionalProperties:
+                    type: string
+                - type: 'null'
+              agentType:
+                type: string
+                enum:
+                - build
+                - captain
+              visibilityScope:
+                type: string
+                enum:
+                - project
+                - creator
+              webhookUrl:
+                anyOf:
+                - type: string
+                - type: 'null'
+                description: Relative bearer-capability URL for incoming-webhook automations. Treat this value as sensitive because anyone who possesses it can trigger the automation.
+              hasWebhookSecret:
+                type: boolean
+              runCount:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              lastTriggeredAt:
+                anyOf:
+                - type: string
+                - type: 'null'
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+              mcpOverrides:
+                anyOf:
+                - type: object
+                  properties:
+                    enabledServerKeys:
+                      maxItems: 64
+                      type: array
+                      items:
+                        type: string
+                        minLength: 1
+                    disabledServerKeys:
+                      maxItems: 64
+                      type: array
+                      items:
+                        type: string
+                        minLength: 1
+                  additionalProperties: false
+                - type: 'null'
+              triggers:
+                type: array
+                items:
+                  oneOf:
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        const: schedule
+                      config:
+                        type: object
+                        properties:
+                          version:
+                            type: number
+                            const: 2
+                          cron:
+                            type: string
+                            minLength: 1
+                            maxLength: 255
+                          timezone:
+                            type: string
+                            minLength: 1
+                            maxLength: 100
+                        required:
+                        - cron
+                        - timezone
+                        additionalProperties: false
+                      scheduleId:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                    required:
+                    - type
+                    - config
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        const: github
+                      config:
+                        anyOf:
+                        - type: object
+                          properties:
+                            source:
+                              type: string
+                              const: github
+                            events:
+                              minItems: 1
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  event:
+                                    type: string
+                                    minLength: 1
+                                  actions:
+                                    maxItems: 100
+                                    type: array
+                                    items:
+                                      type: string
+                                      minLength: 1
+                                      maxLength: 500
+                                required:
+                                - event
+                                additionalProperties: false
+                            filters:
+                              type: object
+                              properties:
+                                branches:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                headBranches:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                authors:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                labels:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                states:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    enum:
+                                    - open
+                                    - draft
+                                    - closed
+                                    - merged
+                              additionalProperties: false
+                          required:
+                          - source
+                          - events
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            version:
+                              type: number
+                              const: 2
+                            provider:
+                              type: string
+                              const: github
+                            event:
+                              type: string
+                              enum:
+                              - draft_opened
+                              - pull_request_opened
+                              - pull_request_pushed
+                              - pull_request_merged
+                              - comment
+                              - branch_push
+                              - label_change
+                              - checks
+                              - issue_comment
+                              - pull_request_review_comment
+                              - pull_request_review_submitted
+                              - pull_request_review_thread
+                              - workflow_run
+                            conditions:
+                              type: object
+                              properties:
+                                repositories:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                branches:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                headBranches:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                authors:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                labels:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                states:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    enum:
+                                    - open
+                                    - draft
+                                    - closed
+                                    - merged
+                                actions:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                conclusions:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                workflows:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                checkNames:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                reviewStates:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                actors:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                              additionalProperties: false
+                            runWhen:
+                              type: string
+                              minLength: 1
+                              maxLength: 2000
+                          required:
+                          - version
+                          - provider
+                          - event
+                          additionalProperties: false
+                    required:
+                    - type
+                    - config
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        const: slack
+                      config:
+                        type: object
+                        properties:
+                          version:
+                            type: number
+                            const: 2
+                          provider:
+                            type: string
+                            const: slack
+                          event:
+                            type: string
+                            enum:
+                            - message
+                            - reaction
+                            - channel_created
+                          conditions:
+                            type: object
+                            properties:
+                              workspaces:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                                description: Slack team IDs (e.g. T0123456789)
+                              channels:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                                description: 'Slack channel IDs (e.g. C0123456789), not #channel-names'
+                              users:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                                description: Slack user IDs (e.g. U0123456789) of message authors
+                              actors:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                                description: Slack user IDs (e.g. U0123456789)
+                              reactions:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                                description: Emoji names without colons
+                              messagePlacements:
+                                minItems: 1
+                                maxItems: 2
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                  - top_level
+                                  - reply
+                              messageTypes:
+                                minItems: 1
+                                maxItems: 2
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                  - human
+                                  - bot
+                              includeBots:
+                                type: boolean
+                              groupingWindowSeconds:
+                                default: 10
+                                type: integer
+                                minimum: 1
+                                maximum: 300
+                              contains:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              excludes:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              regex:
+                                type: string
+                                minLength: 1
+                                maxLength: 256
+                            required:
+                            - groupingWindowSeconds
+                            additionalProperties: false
+                          runWhen:
+                            type: string
+                            minLength: 1
+                            maxLength: 2000
+                        required:
+                        - version
+                        - provider
+                        - event
+                        additionalProperties: false
+                    required:
+                    - type
+                    - config
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        const: sentry
+                      config:
+                        anyOf:
+                        - type: object
+                          properties:
+                            provider:
+                              type: string
+                              const: sentry
+                            events:
+                              minItems: 1
+                              type: array
+                              items:
+                                oneOf:
+                                - type: object
+                                  properties:
+                                    resource:
+                                      type: string
+                                      const: issue
+                                    actions:
+                                      type: array
+                                      items:
+                                        type: string
+                                        enum:
+                                        - created
+                                        - resolved
+                                        - assigned
+                                        - archived
+                                        - unresolved
+                                  required:
+                                  - resource
+                                  additionalProperties: false
+                                - type: object
+                                  properties:
+                                    resource:
+                                      type: string
+                                      const: event_alert
+                                    actions:
+                                      type: array
+                                      items:
+                                        type: string
+                                        enum:
+                                        - triggered
+                                  required:
+                                  - resource
+                                  additionalProperties: false
+                            filters:
+                              type: object
+                              properties:
+                                sentryProjectIds:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                sentryProjectSlugs:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                levels:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                              additionalProperties: false
+                          required:
+                          - provider
+                          - events
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            version:
+                              type: number
+                              const: 2
+                            provider:
+                              type: string
+                              const: sentry
+                            event:
+                              type: string
+                              enum:
+                              - issue_lifecycle
+                              - any_issue
+                              - event_alert
+                            conditions:
+                              type: object
+                              properties:
+                                projects:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                levels:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                actions:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                              additionalProperties: false
+                            runWhen:
+                              type: string
+                              minLength: 1
+                              maxLength: 2000
+                          required:
+                          - version
+                          - provider
+                          - event
+                          additionalProperties: false
+                    required:
+                    - type
+                    - config
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        const: linear
+                      config:
+                        type: object
+                        properties:
+                          version:
+                            type: number
+                            const: 2
+                          provider:
+                            type: string
+                            const: linear
+                          event:
+                            type: string
+                            enum:
+                            - issue_created
+                            - status_changed
+                            - end_cycle
+                          conditions:
+                            type: object
+                            properties:
+                              workspaces:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              teams:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              projects:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              statuses:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              fromStatuses:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              statusTransitions:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              priorities:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              actors:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              labels:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              assignees:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                              cycles:
+                                maxItems: 100
+                                type: array
+                                items:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 500
+                            additionalProperties: false
+                          runWhen:
+                            type: string
+                            minLength: 1
+                            maxLength: 2000
+                        required:
+                        - version
+                        - provider
+                        - event
+                        additionalProperties: false
+                    required:
+                    - type
+                    - config
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        const: incoming_webhook
+                      config:
+                        anyOf:
+                        - type: object
+                          properties: {}
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            version:
+                              type: number
+                              const: 2
+                            provider:
+                              type: string
+                              const: incoming_webhook
+                            event:
+                              type: string
+                              const: request
+                            conditions:
+                              type: object
+                              properties:
+                                contains:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                excludes:
+                                  maxItems: 100
+                                  type: array
+                                  items:
+                                    type: string
+                                    minLength: 1
+                                    maxLength: 500
+                                regex:
+                                  type: string
+                                  minLength: 1
+                                  maxLength: 256
+                              additionalProperties: false
+                            runWhen:
+                              type: string
+                              minLength: 1
+                              maxLength: 2000
+                          required:
+                          - version
+                          - provider
+                          - event
+                          additionalProperties: false
+                      webhookToken:
+                        anyOf:
+                        - type: string
+                        - type: 'null'
+                      webhookSecret:
+                        anyOf:
+                        - type: string
+                          maxLength: 255
+                        - type: 'null'
+                    required:
+                    - type
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        const: on_demand
+                      config:
+                        type: object
+                        properties: {}
+                        additionalProperties: false
+                    required:
+                    - type
+                    additionalProperties: false
+            required:
+            - id
+            - projectId
+            - createdByUserId
+            - name
+            - description
+            - enabled
+            - triggerType
+            - webhookConfig
+            - integrationTriggerConfig
+            - cron
+            - timezone
+            - prompt
+            - model
+            - buildModel
+            - baseBranch
+            - repoBranches
+            - agentType
+            - visibilityScope
+            - webhookUrl
+            - hasWebhookSecret
+            - runCount
+            - lastTriggeredAt
+            - createdAt
+            - updatedAt
+            - mcpOverrides
+            - triggers
+            additionalProperties: false
+        nextCursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+        hasMore:
+          type: boolean
+      required:
+      - items
+      - nextCursor
+      - hasMore
+      additionalProperties: false
+    DeleteAutomationResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        deleted:
+          type: boolean
+        id:
+          type: string
+      required:
+      - deleted
+      - id
+      additionalProperties: false
+    UpdateAutomationBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          anyOf:
+          - type: string
+            maxLength: 5000
+          - type: 'null'
+        enabled:
+          type: boolean
+        triggerType:
+          type: string
+          enum:
+          - schedule
+          - webhook
+          - incoming_webhook
+          - on_demand
+        cron:
+          anyOf:
+          - type: string
+          - type: 'null'
+        timezone:
+          type: string
+          minLength: 1
+        webhookConfig:
+          anyOf:
+          - type: object
+            properties:
+              source:
+                type: string
+                const: github
+              events:
+                minItems: 1
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event:
+                      type: string
+                    actions:
+                      type: array
+                      items:
+                        type: string
+                  required:
+                  - event
+                  additionalProperties: false
+              filters:
+                type: object
+                properties:
+                  branches:
+                    type: array
+                    items:
+                      type: string
+                additionalProperties: false
+            required:
+            - source
+            - events
+            additionalProperties: false
+          - type: 'null'
+        prompt:
+          type: string
+          minLength: 1
+          maxLength: 100000
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+        buildModel:
+          anyOf:
+          - type: string
+          - type: 'null'
+        baseBranch:
+          anyOf:
+          - type: string
+          - type: 'null'
+        repoBranches:
+          anyOf:
+          - type: object
+            propertyNames:
+              type: string
+            additionalProperties:
+              type: string
+          - type: 'null'
+        agentType:
+          type: string
+          enum:
+          - build
+          - captain
+        visibilityScope:
+          type: string
+          enum:
+          - project
+          - creator
+        webhookSecret:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        triggers:
+          minItems: 1
+          maxItems: 20
+          type: array
+          items:
+            oneOf:
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: schedule
+                config:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      const: 2
+                    cron:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                    timezone:
+                      type: string
+                      minLength: 1
+                      maxLength: 100
+                  required:
+                  - cron
+                  - timezone
+                  additionalProperties: false
+                scheduleId:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: github
+                config:
+                  anyOf:
+                  - type: object
+                    properties:
+                      source:
+                        type: string
+                        const: github
+                      events:
+                        minItems: 1
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            event:
+                              type: string
+                              minLength: 1
+                            actions:
+                              maxItems: 100
+                              type: array
+                              items:
+                                type: string
+                                minLength: 1
+                                maxLength: 500
+                          required:
+                          - event
+                          additionalProperties: false
+                      filters:
+                        type: object
+                        properties:
+                          branches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          headBranches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          authors:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          labels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          states:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                              - open
+                              - draft
+                              - closed
+                              - merged
+                        additionalProperties: false
+                    required:
+                    - source
+                    - events
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      version:
+                        type: number
+                        const: 2
+                      provider:
+                        type: string
+                        const: github
+                      event:
+                        type: string
+                        enum:
+                        - draft_opened
+                        - pull_request_opened
+                        - pull_request_pushed
+                        - pull_request_merged
+                        - comment
+                        - branch_push
+                        - label_change
+                        - checks
+                        - issue_comment
+                        - pull_request_review_comment
+                        - pull_request_review_submitted
+                        - pull_request_review_thread
+                        - workflow_run
+                      conditions:
+                        type: object
+                        properties:
+                          repositories:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          branches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          headBranches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          authors:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          labels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          states:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                              - open
+                              - draft
+                              - closed
+                              - merged
+                          actions:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          conclusions:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          workflows:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          checkNames:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          reviewStates:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          actors:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                        additionalProperties: false
+                      runWhen:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                    required:
+                    - version
+                    - provider
+                    - event
+                    additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: slack
+                config:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      const: 2
+                    provider:
+                      type: string
+                      const: slack
+                    event:
+                      type: string
+                      enum:
+                      - message
+                      - reaction
+                      - channel_created
+                    conditions:
+                      type: object
+                      properties:
+                        workspaces:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Slack team IDs (e.g. T0123456789)
+                        channels:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: 'Slack channel IDs (e.g. C0123456789), not #channel-names'
+                        users:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Slack user IDs (e.g. U0123456789) of message authors
+                        actors:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Slack user IDs (e.g. U0123456789)
+                        reactions:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Emoji names without colons
+                        messagePlacements:
+                          minItems: 1
+                          maxItems: 2
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - top_level
+                            - reply
+                        messageTypes:
+                          minItems: 1
+                          maxItems: 2
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - human
+                            - bot
+                        includeBots:
+                          type: boolean
+                        groupingWindowSeconds:
+                          default: 10
+                          type: integer
+                          minimum: 1
+                          maximum: 300
+                        contains:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        excludes:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        regex:
+                          type: string
+                          minLength: 1
+                          maxLength: 256
+                      required:
+                      - groupingWindowSeconds
+                      additionalProperties: false
+                    runWhen:
+                      type: string
+                      minLength: 1
+                      maxLength: 2000
+                  required:
+                  - version
+                  - provider
+                  - event
+                  additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: sentry
+                config:
+                  anyOf:
+                  - type: object
+                    properties:
+                      provider:
+                        type: string
+                        const: sentry
+                      events:
+                        minItems: 1
+                        type: array
+                        items:
+                          oneOf:
+                          - type: object
+                            properties:
+                              resource:
+                                type: string
+                                const: issue
+                              actions:
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                  - created
+                                  - resolved
+                                  - assigned
+                                  - archived
+                                  - unresolved
+                            required:
+                            - resource
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              resource:
+                                type: string
+                                const: event_alert
+                              actions:
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                  - triggered
+                            required:
+                            - resource
+                            additionalProperties: false
+                      filters:
+                        type: object
+                        properties:
+                          sentryProjectIds:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          sentryProjectSlugs:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          levels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                        additionalProperties: false
+                    required:
+                    - provider
+                    - events
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      version:
+                        type: number
+                        const: 2
+                      provider:
+                        type: string
+                        const: sentry
+                      event:
+                        type: string
+                        enum:
+                        - issue_lifecycle
+                        - any_issue
+                        - event_alert
+                      conditions:
+                        type: object
+                        properties:
+                          projects:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          levels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          actions:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                        additionalProperties: false
+                      runWhen:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                    required:
+                    - version
+                    - provider
+                    - event
+                    additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: linear
+                config:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      const: 2
+                    provider:
+                      type: string
+                      const: linear
+                    event:
+                      type: string
+                      enum:
+                      - issue_created
+                      - status_changed
+                      - end_cycle
+                    conditions:
+                      type: object
+                      properties:
+                        workspaces:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        teams:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        projects:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        statuses:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        fromStatuses:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        statusTransitions:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        priorities:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        actors:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        labels:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        assignees:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        cycles:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                      additionalProperties: false
+                    runWhen:
+                      type: string
+                      minLength: 1
+                      maxLength: 2000
+                  required:
+                  - version
+                  - provider
+                  - event
+                  additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: incoming_webhook
+                config:
+                  anyOf:
+                  - type: object
+                    properties: {}
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      version:
+                        type: number
+                        const: 2
+                      provider:
+                        type: string
+                        const: incoming_webhook
+                      event:
+                        type: string
+                        const: request
+                      conditions:
+                        type: object
+                        properties:
+                          contains:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          excludes:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          regex:
+                            type: string
+                            minLength: 1
+                            maxLength: 256
+                        additionalProperties: false
+                      runWhen:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                    required:
+                    - version
+                    - provider
+                    - event
+                    additionalProperties: false
+                webhookToken:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                webhookSecret:
+                  anyOf:
+                  - type: string
+                    maxLength: 255
+                  - type: 'null'
+              required:
+              - type
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: on_demand
+                config:
+                  type: object
+                  properties: {}
+                  additionalProperties: false
+              required:
+              - type
+              additionalProperties: false
+        mcpOverrides:
+          anyOf:
+          - type: object
+            properties:
+              enabledServerKeys:
+                maxItems: 64
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+              disabledServerKeys:
+                maxItems: 64
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+            additionalProperties: false
+          - type: 'null'
+      additionalProperties: false
+    CreateAutomationBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          anyOf:
+          - type: string
+            maxLength: 5000
+          - type: 'null'
+        enabled:
+          type: boolean
+        triggerType:
+          type: string
+          enum:
+          - schedule
+          - webhook
+          - incoming_webhook
+          - on_demand
+        cron:
+          anyOf:
+          - type: string
+          - type: 'null'
+        timezone:
+          type: string
+          minLength: 1
+        webhookConfig:
+          anyOf:
+          - type: object
+            properties:
+              source:
+                type: string
+                const: github
+              events:
+                minItems: 1
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event:
+                      type: string
+                    actions:
+                      type: array
+                      items:
+                        type: string
+                  required:
+                  - event
+                  additionalProperties: false
+              filters:
+                type: object
+                properties:
+                  branches:
+                    type: array
+                    items:
+                      type: string
+                additionalProperties: false
+            required:
+            - source
+            - events
+            additionalProperties: false
+          - type: 'null'
+        prompt:
+          type: string
+          minLength: 1
+          maxLength: 100000
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+        buildModel:
+          anyOf:
+          - type: string
+          - type: 'null'
+        baseBranch:
+          anyOf:
+          - type: string
+          - type: 'null'
+        repoBranches:
+          anyOf:
+          - type: object
+            propertyNames:
+              type: string
+            additionalProperties:
+              type: string
+          - type: 'null'
+        agentType:
+          type: string
+          enum:
+          - build
+          - captain
+        visibilityScope:
+          type: string
+          enum:
+          - project
+          - creator
+        webhookSecret:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        triggers:
+          minItems: 1
+          maxItems: 20
+          type: array
+          items:
+            oneOf:
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: schedule
+                config:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      const: 2
+                    cron:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                    timezone:
+                      type: string
+                      minLength: 1
+                      maxLength: 100
+                  required:
+                  - cron
+                  - timezone
+                  additionalProperties: false
+                scheduleId:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: github
+                config:
+                  anyOf:
+                  - type: object
+                    properties:
+                      source:
+                        type: string
+                        const: github
+                      events:
+                        minItems: 1
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            event:
+                              type: string
+                              minLength: 1
+                            actions:
+                              maxItems: 100
+                              type: array
+                              items:
+                                type: string
+                                minLength: 1
+                                maxLength: 500
+                          required:
+                          - event
+                          additionalProperties: false
+                      filters:
+                        type: object
+                        properties:
+                          branches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          headBranches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          authors:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          labels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          states:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                              - open
+                              - draft
+                              - closed
+                              - merged
+                        additionalProperties: false
+                    required:
+                    - source
+                    - events
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      version:
+                        type: number
+                        const: 2
+                      provider:
+                        type: string
+                        const: github
+                      event:
+                        type: string
+                        enum:
+                        - draft_opened
+                        - pull_request_opened
+                        - pull_request_pushed
+                        - pull_request_merged
+                        - comment
+                        - branch_push
+                        - label_change
+                        - checks
+                        - issue_comment
+                        - pull_request_review_comment
+                        - pull_request_review_submitted
+                        - pull_request_review_thread
+                        - workflow_run
+                      conditions:
+                        type: object
+                        properties:
+                          repositories:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          branches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          headBranches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          authors:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          labels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          states:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                              - open
+                              - draft
+                              - closed
+                              - merged
+                          actions:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          conclusions:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          workflows:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          checkNames:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          reviewStates:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          actors:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                        additionalProperties: false
+                      runWhen:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                    required:
+                    - version
+                    - provider
+                    - event
+                    additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: slack
+                config:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      const: 2
+                    provider:
+                      type: string
+                      const: slack
+                    event:
+                      type: string
+                      enum:
+                      - message
+                      - reaction
+                      - channel_created
+                    conditions:
+                      type: object
+                      properties:
+                        workspaces:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Slack team IDs (e.g. T0123456789)
+                        channels:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: 'Slack channel IDs (e.g. C0123456789), not #channel-names'
+                        users:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Slack user IDs (e.g. U0123456789) of message authors
+                        actors:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Slack user IDs (e.g. U0123456789)
+                        reactions:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Emoji names without colons
+                        messagePlacements:
+                          minItems: 1
+                          maxItems: 2
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - top_level
+                            - reply
+                        messageTypes:
+                          minItems: 1
+                          maxItems: 2
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - human
+                            - bot
+                        includeBots:
+                          type: boolean
+                        groupingWindowSeconds:
+                          default: 10
+                          type: integer
+                          minimum: 1
+                          maximum: 300
+                        contains:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        excludes:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        regex:
+                          type: string
+                          minLength: 1
+                          maxLength: 256
+                      required:
+                      - groupingWindowSeconds
+                      additionalProperties: false
+                    runWhen:
+                      type: string
+                      minLength: 1
+                      maxLength: 2000
+                  required:
+                  - version
+                  - provider
+                  - event
+                  additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: sentry
+                config:
+                  anyOf:
+                  - type: object
+                    properties:
+                      provider:
+                        type: string
+                        const: sentry
+                      events:
+                        minItems: 1
+                        type: array
+                        items:
+                          oneOf:
+                          - type: object
+                            properties:
+                              resource:
+                                type: string
+                                const: issue
+                              actions:
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                  - created
+                                  - resolved
+                                  - assigned
+                                  - archived
+                                  - unresolved
+                            required:
+                            - resource
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              resource:
+                                type: string
+                                const: event_alert
+                              actions:
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                  - triggered
+                            required:
+                            - resource
+                            additionalProperties: false
+                      filters:
+                        type: object
+                        properties:
+                          sentryProjectIds:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          sentryProjectSlugs:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          levels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                        additionalProperties: false
+                    required:
+                    - provider
+                    - events
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      version:
+                        type: number
+                        const: 2
+                      provider:
+                        type: string
+                        const: sentry
+                      event:
+                        type: string
+                        enum:
+                        - issue_lifecycle
+                        - any_issue
+                        - event_alert
+                      conditions:
+                        type: object
+                        properties:
+                          projects:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          levels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          actions:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                        additionalProperties: false
+                      runWhen:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                    required:
+                    - version
+                    - provider
+                    - event
+                    additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: linear
+                config:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      const: 2
+                    provider:
+                      type: string
+                      const: linear
+                    event:
+                      type: string
+                      enum:
+                      - issue_created
+                      - status_changed
+                      - end_cycle
+                    conditions:
+                      type: object
+                      properties:
+                        workspaces:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        teams:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        projects:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        statuses:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        fromStatuses:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        statusTransitions:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        priorities:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        actors:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        labels:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        assignees:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        cycles:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                      additionalProperties: false
+                    runWhen:
+                      type: string
+                      minLength: 1
+                      maxLength: 2000
+                  required:
+                  - version
+                  - provider
+                  - event
+                  additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: incoming_webhook
+                config:
+                  anyOf:
+                  - type: object
+                    properties: {}
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      version:
+                        type: number
+                        const: 2
+                      provider:
+                        type: string
+                        const: incoming_webhook
+                      event:
+                        type: string
+                        const: request
+                      conditions:
+                        type: object
+                        properties:
+                          contains:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          excludes:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          regex:
+                            type: string
+                            minLength: 1
+                            maxLength: 256
+                        additionalProperties: false
+                      runWhen:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                    required:
+                    - version
+                    - provider
+                    - event
+                    additionalProperties: false
+                webhookToken:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                webhookSecret:
+                  anyOf:
+                  - type: string
+                    maxLength: 255
+                  - type: 'null'
+              required:
+              - type
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: on_demand
+                config:
+                  type: object
+                  properties: {}
+                  additionalProperties: false
+              required:
+              - type
+              additionalProperties: false
+        mcpOverrides:
+          anyOf:
+          - type: object
+            properties:
+              enabledServerKeys:
+                maxItems: 64
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+              disabledServerKeys:
+                maxItems: 64
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+            additionalProperties: false
+          - type: 'null'
+      required:
+      - name
+      - prompt
+      additionalProperties: false
+    TriggerAutomationResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        runId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        jamId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - running
+          - skipped
+          - failed
+      required:
+      - runId
+      - jamId
+      - status
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
+    Automation:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        createdByUserId:
+          type: string
+        name:
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+        enabled:
+          type: boolean
+        triggerType:
+          type: string
+          enum:
+          - schedule
+          - webhook
+          - incoming_webhook
+          - on_demand
+          - integration
+        webhookConfig:
+          anyOf:
+          - type: object
+            properties:
+              source:
+                type: string
+                const: github
+              events:
+                minItems: 1
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event:
+                      type: string
+                    actions:
+                      type: array
+                      items:
+                        type: string
+                  required:
+                  - event
+                  additionalProperties: false
+              filters:
+                type: object
+                properties:
+                  branches:
+                    type: array
+                    items:
+                      type: string
+                additionalProperties: false
+            required:
+            - source
+            - events
+            additionalProperties: false
+          - type: 'null'
+        integrationTriggerConfig:
+          anyOf:
+          - {}
+          - type: 'null'
+        cron:
+          anyOf:
+          - type: string
+          - type: 'null'
+        timezone:
+          type: string
+        prompt:
+          type: string
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+        buildModel:
+          anyOf:
+          - type: string
+          - type: 'null'
+        baseBranch:
+          anyOf:
+          - type: string
+          - type: 'null'
+        repoBranches:
+          anyOf:
+          - type: object
+            propertyNames:
+              type: string
+            additionalProperties:
+              type: string
+          - type: 'null'
+        agentType:
+          type: string
+          enum:
+          - build
+          - captain
+        visibilityScope:
+          type: string
+          enum:
+          - project
+          - creator
+        webhookUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Relative bearer-capability URL for incoming-webhook automations. Treat this value as sensitive because anyone who possesses it can trigger the automation.
+        hasWebhookSecret:
+          type: boolean
+        runCount:
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        lastTriggeredAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        mcpOverrides:
+          anyOf:
+          - type: object
+            properties:
+              enabledServerKeys:
+                maxItems: 64
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+              disabledServerKeys:
+                maxItems: 64
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+            additionalProperties: false
+          - type: 'null'
+        triggers:
+          type: array
+          items:
+            oneOf:
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: schedule
+                config:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      const: 2
+                    cron:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                    timezone:
+                      type: string
+                      minLength: 1
+                      maxLength: 100
+                  required:
+                  - cron
+                  - timezone
+                  additionalProperties: false
+                scheduleId:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: github
+                config:
+                  anyOf:
+                  - type: object
+                    properties:
+                      source:
+                        type: string
+                        const: github
+                      events:
+                        minItems: 1
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            event:
+                              type: string
+                              minLength: 1
+                            actions:
+                              maxItems: 100
+                              type: array
+                              items:
+                                type: string
+                                minLength: 1
+                                maxLength: 500
+                          required:
+                          - event
+                          additionalProperties: false
+                      filters:
+                        type: object
+                        properties:
+                          branches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          headBranches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          authors:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          labels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          states:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                              - open
+                              - draft
+                              - closed
+                              - merged
+                        additionalProperties: false
+                    required:
+                    - source
+                    - events
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      version:
+                        type: number
+                        const: 2
+                      provider:
+                        type: string
+                        const: github
+                      event:
+                        type: string
+                        enum:
+                        - draft_opened
+                        - pull_request_opened
+                        - pull_request_pushed
+                        - pull_request_merged
+                        - comment
+                        - branch_push
+                        - label_change
+                        - checks
+                        - issue_comment
+                        - pull_request_review_comment
+                        - pull_request_review_submitted
+                        - pull_request_review_thread
+                        - workflow_run
+                      conditions:
+                        type: object
+                        properties:
+                          repositories:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          branches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          headBranches:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          authors:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          labels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          states:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                              - open
+                              - draft
+                              - closed
+                              - merged
+                          actions:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          conclusions:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          workflows:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          checkNames:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          reviewStates:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          actors:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                        additionalProperties: false
+                      runWhen:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                    required:
+                    - version
+                    - provider
+                    - event
+                    additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: slack
+                config:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      const: 2
+                    provider:
+                      type: string
+                      const: slack
+                    event:
+                      type: string
+                      enum:
+                      - message
+                      - reaction
+                      - channel_created
+                    conditions:
+                      type: object
+                      properties:
+                        workspaces:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Slack team IDs (e.g. T0123456789)
+                        channels:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: 'Slack channel IDs (e.g. C0123456789), not #channel-names'
+                        users:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Slack user IDs (e.g. U0123456789) of message authors
+                        actors:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Slack user IDs (e.g. U0123456789)
+                        reactions:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                          description: Emoji names without colons
+                        messagePlacements:
+                          minItems: 1
+                          maxItems: 2
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - top_level
+                            - reply
+                        messageTypes:
+                          minItems: 1
+                          maxItems: 2
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - human
+                            - bot
+                        includeBots:
+                          type: boolean
+                        groupingWindowSeconds:
+                          default: 10
+                          type: integer
+                          minimum: 1
+                          maximum: 300
+                        contains:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        excludes:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        regex:
+                          type: string
+                          minLength: 1
+                          maxLength: 256
+                      required:
+                      - groupingWindowSeconds
+                      additionalProperties: false
+                    runWhen:
+                      type: string
+                      minLength: 1
+                      maxLength: 2000
+                  required:
+                  - version
+                  - provider
+                  - event
+                  additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: sentry
+                config:
+                  anyOf:
+                  - type: object
+                    properties:
+                      provider:
+                        type: string
+                        const: sentry
+                      events:
+                        minItems: 1
+                        type: array
+                        items:
+                          oneOf:
+                          - type: object
+                            properties:
+                              resource:
+                                type: string
+                                const: issue
+                              actions:
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                  - created
+                                  - resolved
+                                  - assigned
+                                  - archived
+                                  - unresolved
+                            required:
+                            - resource
+                            additionalProperties: false
+                          - type: object
+                            properties:
+                              resource:
+                                type: string
+                                const: event_alert
+                              actions:
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                  - triggered
+                            required:
+                            - resource
+                            additionalProperties: false
+                      filters:
+                        type: object
+                        properties:
+                          sentryProjectIds:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          sentryProjectSlugs:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          levels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                        additionalProperties: false
+                    required:
+                    - provider
+                    - events
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      version:
+                        type: number
+                        const: 2
+                      provider:
+                        type: string
+                        const: sentry
+                      event:
+                        type: string
+                        enum:
+                        - issue_lifecycle
+                        - any_issue
+                        - event_alert
+                      conditions:
+                        type: object
+                        properties:
+                          projects:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          levels:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          actions:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                        additionalProperties: false
+                      runWhen:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                    required:
+                    - version
+                    - provider
+                    - event
+                    additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: linear
+                config:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      const: 2
+                    provider:
+                      type: string
+                      const: linear
+                    event:
+                      type: string
+                      enum:
+                      - issue_created
+                      - status_changed
+                      - end_cycle
+                    conditions:
+                      type: object
+                      properties:
+                        workspaces:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        teams:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        projects:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        statuses:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        fromStatuses:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        statusTransitions:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        priorities:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        actors:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        labels:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        assignees:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                        cycles:
+                          maxItems: 100
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 500
+                      additionalProperties: false
+                    runWhen:
+                      type: string
+                      minLength: 1
+                      maxLength: 2000
+                  required:
+                  - version
+                  - provider
+                  - event
+                  additionalProperties: false
+              required:
+              - type
+              - config
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: incoming_webhook
+                config:
+                  anyOf:
+                  - type: object
+                    properties: {}
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      version:
+                        type: number
+                        const: 2
+                      provider:
+                        type: string
+                        const: incoming_webhook
+                      event:
+                        type: string
+                        const: request
+                      conditions:
+                        type: object
+                        properties:
+                          contains:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          excludes:
+                            maxItems: 100
+                            type: array
+                            items:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                          regex:
+                            type: string
+                            minLength: 1
+                            maxLength: 256
+                        additionalProperties: false
+                      runWhen:
+                        type: string
+                        minLength: 1
+                        maxLength: 2000
+                    required:
+                    - version
+                    - provider
+                    - event
+                    additionalProperties: false
+                webhookToken:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                webhookSecret:
+                  anyOf:
+                  - type: string
+                    maxLength: 255
+                  - type: 'null'
+              required:
+              - type
+              additionalProperties: false
+            - type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                  const: on_demand
+                config:
+                  type: object
+                  properties: {}
+                  additionalProperties: false
+              required:
+              - type
+              additionalProperties: false
+      required:
+      - id
+      - projectId
+      - createdByUserId
+      - name
+      - description
+      - enabled
+      - triggerType
+      - webhookConfig
+      - integrationTriggerConfig
+      - cron
+      - timezone
+      - prompt
+      - model
+      - buildModel
+      - baseBranch
+      - repoBranches
+      - agentType
+      - visibilityScope
+      - webhookUrl
+      - hasWebhookSecret
+      - runCount
+      - lastTriggeredAt
+      - createdAt
+      - updatedAt
+      - mcpOverrides
+      - triggers
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API token (capy_xxxx). Generate at capy.ai/settings/tokens

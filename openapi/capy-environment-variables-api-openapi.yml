@@ -1,0 +1,273 @@
+openapi: 3.1.0
+info:
+  title: Capy automations environment-variables API
+  version: 1.0.0
+servers:
+- url: https://capy.ai/api
+security:
+- bearerAuth: []
+tags:
+- name: environment-variables
+paths:
+  /v1/projects/{projectId}/environment-variables/personal:
+    get:
+      operationId: listPersonalEnvironmentVariables
+      summary: List personal environment variables
+      description: List names and configuration metadata for the effective actor's personal project environment variables. Secret values are never returned. Admin service users may explicitly target a same-organization project member with impersonateUserEmail.
+      tags:
+      - environment-variables
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: impersonateUserEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Admin service users may explicitly act as this same-organization project member. Human and non-admin service-user tokens must omit this parameter.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalEnvironmentVariablesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    put:
+      operationId: upsertPersonalEnvironmentVariables
+      summary: Upsert personal environment variables
+      description: Bulk-upsert personal project environment variables for the effective actor. Omitted variables are preserved and secret values are never returned. Admin service users may explicitly target a same-organization project member with impersonateUserEmail.
+      tags:
+      - environment-variables
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: impersonateUserEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Admin service users may explicitly act as this same-organization project member. Human and non-admin service-user tokens must omit this parameter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertPersonalEnvironmentVariablesBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalEnvironmentVariablesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/projects/{projectId}/environment-variables/personal/{name}:
+    delete:
+      operationId: deletePersonalEnvironmentVariable
+      summary: Delete personal environment variable
+      description: Soft-delete one personal project environment variable for the effective actor. The name path segment must be URL encoded. Admin service users may explicitly target a same-organization project member with impersonateUserEmail.
+      tags:
+      - environment-variables
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        description: Project ID.
+        schema:
+          type: string
+        example: proj_123
+      - name: name
+        in: path
+        required: true
+        description: Environment variable name.
+        schema:
+          type: string
+        example: MY_TOKEN
+      - name: impersonateUserEmail
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          description: Admin service users may explicitly act as this same-organization project member. Human and non-admin service-user tokens must omit this parameter.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletePersonalEnvironmentVariableResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    UpsertPersonalEnvironmentVariablesBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        variables:
+          minItems: 1
+          maxItems: 100
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 191
+                description: Shell environment variable name, limited to 191 characters by storage.
+              value:
+                type: string
+                maxLength: 100000
+            required:
+            - name
+            - value
+            additionalProperties: false
+      required:
+      - variables
+      additionalProperties: false
+    DeletePersonalEnvironmentVariableResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        deleted:
+          type: boolean
+        name:
+          type: string
+      required:
+      - deleted
+      - name
+      additionalProperties: false
+    PersonalEnvironmentVariablesResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              configured:
+                type: boolean
+                const: true
+              updatedAt:
+                type: string
+              lastUpdatedByUserId:
+                anyOf:
+                - type: string
+                - type: 'null'
+            required:
+            - name
+            - configured
+            - updatedAt
+            - lastUpdatedByUserId
+            additionalProperties: false
+      required:
+      - items
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API token (capy_xxxx). Generate at capy.ai/settings/tokens
