@@ -1,0 +1,13 @@
+generated: '2026-07-18'
+method: searched
+probe: true
+source: https://capy.ai/security
+url: https://trust.capy.ai
+security_page: https://capy.ai/security
+certifications:
+- SOC 2 Type II
+evidence:
+- source: https://capy.ai/security
+  keywords:
+  - soc 2
+  - trust center

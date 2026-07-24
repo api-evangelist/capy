@@ -1,0 +1,50 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/capy-openapi-original.json
+docs: https://docs.capy.ai/api-reference/overview
+authentication:
+  style: bearer
+  header: 'Authorization: Bearer capy_xxxx'
+  ref: authentication/capy-authentication.yml
+base_url: https://capy.ai/api/v1/
+versioning:
+  scheme: uri-path
+  current: v1
+  ref: lifecycle/capy-lifecycle.yml
+pagination:
+  style: cursor
+  request_params:
+    limit: { default: 20, min: 1, max: 100 }
+    cursor: opaque string returned by the prior response
+  response_fields:
+    items: array of results
+    nextCursor: opaque cursor for the next page; null when exhausted
+    hasMore: boolean
+  applies_to:
+  - listThreads
+  - listThreadMessages
+  - listProjects
+  - listBrowserSnapshots
+  - listAutomations
+idempotency:
+  supported: false
+  note: >-
+    Capy does not document an Idempotency-Key header or idempotent-retry contract;
+    no idempotency parameter appears in the OpenAPI. Writes are not automatically
+    de-duplicated on retry.
+error_envelope:
+  shape: '{ "error": { "code": string, "message": string, "details"?: any } }'
+  format: custom-json
+  ref: errors/capy-problem-types.yml
+rate_limiting:
+  documented: false
+  signal: >-
+    A 429 too_many_requests response exists on thread-create and message-send, but
+    no rate-limit headers (RateLimit-*, Retry-After) are documented.
+identifiers:
+  task_id_formats:
+  - uuid (e.g. 550e8400-e29b-41d4-a716-446655440000)
+  - human identifier (e.g. SCO-123)
+  note: Thread, project, snapshot and automation IDs are opaque strings.
+metadata:
+  supported: false

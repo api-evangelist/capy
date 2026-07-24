@@ -1,0 +1,36 @@
+{
+  "provider": "capy",
+  "sources": [
+    "capy-automations-api-openapi.yml",
+    "capy-browser-snapshots-api-openapi.yml",
+    "capy-environment-variables-api-openapi.yml",
+    "capy-models-api-openapi.yml",
+    "capy-projects-api-openapi.yml",
+    "capy-sessions-api-openapi.yml",
+    "capy-setup-api-openapi.yml",
+    "capy-snapshots-api-openapi.yml",
+    "capy-tags-api-openapi.yml",
+    "capy-tasks-api-openapi.yml",
+    "capy-threads-api-openapi.yml",
+    "capy-usage-api-openapi.yml"
+  ],
+  "outputs": [
+    "capy-automations-api-openapi.yml",
+    "capy-browser-snapshots-api-openapi.yml",
+    "capy-environment-variables-api-openapi.yml",
+    "capy-models-api-openapi.yml",
+    "capy-projects-api-openapi.yml",
+    "capy-sessions-api-openapi.yml",
+    "capy-setup-api-openapi.yml",
+    "capy-snapshots-api-openapi.yml",
+    "capy-tags-api-openapi.yml",
+    "capy-tasks-api-openapi.yml",
+    "capy-threads-api-openapi.yml",
+    "capy-usage-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

@@ -1,0 +1,59 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/capy-openapi-original.json
+docs: https://docs.capy.ai/api-reference/overview
+format: custom-json
+envelope:
+  shape: '{ "error": { "code": string, "message": string, "details"?: any } }'
+  fields:
+  - error.code
+  - error.message
+  - error.details
+  content_type: application/json
+  note: >-
+    Capy does not use RFC 9457 application/problem+json. Every non-2xx response
+    returns a single top-level `error` object with a machine-readable `code`,
+    a human `message`, and optional `details`.
+problems:
+- status: 401
+  code: unauthorized
+  title: Missing or invalid API token
+  remediation: 'Send a valid `Authorization: Bearer capy_xxxx` header; regenerate at capy.ai/settings/tokens.'
+  component: '#/components/responses/Unauthorized'
+- status: 403
+  code: forbidden
+  title: Insufficient access permissions
+  remediation: The token lacks access to the requested project or resource.
+  component: '#/components/responses/Forbidden'
+- status: 404
+  code: not_found
+  title: Resource does not exist
+  remediation: Verify the project / thread / task / snapshot ID.
+  component: '#/components/responses/NotFound'
+- status: 409
+  code: conflict
+  title: Conflicting state
+  remediation: The resource is in a state that conflicts with the request (e.g. duplicate or concurrent modification).
+  component: '#/components/responses/Conflict'
+- status: 410
+  code: gone
+  title: Resource no longer available
+  remediation: >-
+    Returned e.g. by getThreadSessionToken when the session identity token has
+    expired or the session has ended.
+  component: '#/components/responses/Gone'
+- status: 422
+  code: validation_error
+  title: Invalid request parameters
+  remediation: Inspect `error.details` for field-level validation errors and correct the request body/query.
+  component: '#/components/responses/ValidationError'
+- status: 429
+  code: too_many_requests
+  title: Rate limit exceeded
+  remediation: Back off and retry; applies to write-heavy endpoints (thread creation, message send).
+  component: '#/components/responses/TooManyRequests'
+- status: 500
+  code: internal_error
+  title: Server error
+  remediation: Retry with backoff; contact support@capy.ai if it persists.
+  component: '#/components/responses/InternalError'

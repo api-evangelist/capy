@@ -1,0 +1,71 @@
+# Capy
+
+## Docs
+
+- [Billing and Payments](https://docs.capy.ai/admin/billing.md): Manage your Capy subscription, monitor real-time usage, add balance manually or with auto-reload, and view per-task cost breakdowns from the dashboard.
+- [Team Members and Roles](https://docs.capy.ai/admin/members.md): Manage your Capy organization — invite team members, assign Owner, Admin, or Member roles, and control access to projects and settings.
+- [Referrals](https://docs.capy.ai/admin/referrals.md): Earn up to $500 in credits per referral by sharing your unique link. When your friend makes a paid subscription or credit purchase, you both get bonus credits.
+- [Security](https://docs.capy.ai/admin/security.md): Learn how Capy protects your code — isolated VMs per task, encrypted OAuth tokens, scoped GitHub permissions, and infrastructure security practices.
+- [Create browser snapshot](https://docs.capy.ai/api-reference/browser-snapshots/create-snapshot.md): Create a new browser snapshot with cookies and localStorage state. Domains are automatically extracted from cookie domains.
+- [Delete browser snapshot](https://docs.capy.ai/api-reference/browser-snapshots/delete-snapshot.md): Delete a browser snapshot.
+- [Get browser snapshot](https://docs.capy.ai/api-reference/browser-snapshots/get-snapshot.md): Get a browser snapshot by ID including its full storage state.
+- [List browser snapshots](https://docs.capy.ai/api-reference/browser-snapshots/list-snapshots.md): List browser snapshots for a project. Private snapshots are only visible to their creator.
+- [Browser snapshots](https://docs.capy.ai/api-reference/browser-snapshots/overview.md): Inject authenticated browser state into agent sessions via cookies and localStorage
+- [Update browser snapshot](https://docs.capy.ai/api-reference/browser-snapshots/update-snapshot.md): Update browser snapshot metadata. Only the snapshot creator can change the isPrivate flag.
+- [List models](https://docs.capy.ai/api-reference/models/list-models.md): List models available to the API.
+- [Models reference](https://docs.capy.ai/api-reference/models/models-reference.md): All available model IDs for the Capy API, with provider details and pricing.
+- [API Reference](https://docs.capy.ai/api-reference/overview.md): Programmatic access to Capy's agent platform
+- [Get project](https://docs.capy.ai/api-reference/projects/get-project.md): Get a single project.
+- [List projects](https://docs.capy.ai/api-reference/projects/list-projects.md): List projects available to the API token.
+- [Session identity tokens](https://docs.capy.ai/api-reference/sessions/overview.md): Verify that a request came from a real, active Capy session
+- [Verify session token](https://docs.capy.ai/api-reference/sessions/verify-session.md): Verify a session identity token issued for a captain session. The caller must have access to the project that owns the session so the endpoint cannot be used for cross-tenant enumeration. Failure responses are intentionally opaque: only `expired` is distinguished from `invalid`, and callers should a…
+- [Get Setup](https://docs.capy.ai/api-reference/setup/get-setup.md): Get Setup used for future project runs. Setup contains VM size, three automatic repository scripts, opt-in Commands, terminals, previews, and pre/post tool hooks. Environment variables are configured separately.
+- [Setup](https://docs.capy.ai/api-reference/setup/overview.md): Configure the project's dev environment
+- [Update Setup](https://docs.capy.ai/api-reference/setup/update-setup.md): Save Setup for future project runs. The update becomes active immediately; secret and environment variable fields are not accepted.
+- [Get Snapshots](https://docs.capy.ai/api-reference/snapshots/get-snapshots.md): Get whether optional Snapshots are enabled for the project. Snapshots are independent from Setup.
+- [Snapshots](https://docs.capy.ai/api-reference/snapshots/overview.md): Enable or disable optional cached VM state
+- [Update Snapshots](https://docs.capy.ai/api-reference/snapshots/update-snapshots.md): Enable or disable optional Snapshots. This does not gate saving or testing Setup.
+- [Create tag](https://docs.capy.ai/api-reference/tags/create-tag.md): Create a reusable captain-thread tag for the project's organization. Reusing an existing tag name restores it and updates its color.
+- [List tags](https://docs.capy.ai/api-reference/tags/list-tags.md): List reusable captain-thread tags defined for the project's organization.
+- [Set thread tags](https://docs.capy.ai/api-reference/tags/set-thread-tags.md): Replace the tags assigned to a captain thread. Every tag must already be defined for the project's organization.
+- [Create PR](https://docs.capy.ai/api-reference/tasks/create-pr.md)
+- [Create task](https://docs.capy.ai/api-reference/tasks/create-task.md)
+- [Get diff](https://docs.capy.ai/api-reference/tasks/get-diff.md): Get the current diff for a task by UUID.
+- [Get task](https://docs.capy.ai/api-reference/tasks/get-task.md): Get a task by UUID.
+- [List tasks](https://docs.capy.ai/api-reference/tasks/list-tasks.md)
+- [Send message](https://docs.capy.ai/api-reference/tasks/send-message.md)
+- [Start task](https://docs.capy.ai/api-reference/tasks/start-task.md)
+- [Stop task](https://docs.capy.ai/api-reference/tasks/stop-task.md)
+- [Archive thread](https://docs.capy.ai/api-reference/threads/archive-thread.md): Archive a captain thread. If the thread is actively running, the archive succeeds first and then the API attempts to stop the active run on a best-effort basis.
+- [Create and start thread](https://docs.capy.ai/api-reference/threads/create-thread.md): Create a new captain thread and immediately start execution, optionally assigning existing project tags.
+- [Get session token](https://docs.capy.ai/api-reference/threads/get-session-token.md): Fetch the current session identity token for a captain thread. The caller must have access to the project that owns the thread. The same token is also written inside the captain VM to `/etc/capy/session-token` with permissions `0600`, so code running inside the VM can read it locally. A `410` respon…
+- [Get thread](https://docs.capy.ai/api-reference/threads/get-thread.md): Get a single captain thread.
+- [List messages](https://docs.capy.ai/api-reference/threads/list-messages.md): List messages in a captain thread.
+- [List threads](https://docs.capy.ai/api-reference/threads/list-threads.md): List captain threads for a project.
+- [Send message](https://docs.capy.ai/api-reference/threads/send-message.md): Send a message to an existing thread.
+- [Stop thread](https://docs.capy.ai/api-reference/threads/stop-thread.md): Stop an actively running captain thread.
+- [Unarchive thread](https://docs.capy.ai/api-reference/threads/unarchive-thread.md): Unarchive a captain thread. This does not restart or resume execution.
+- [Automations](https://docs.capy.ai/automations.md): Schedule recurring AI coding tasks in Capy — daily cleanups, weekly dependency updates, nightly builds, or anything you want an agent to do on repeat.
+- [Dev environment](https://docs.capy.ai/configs/dev-environment.md): Configure how Capy prepares and maintains project VMs with Setup scripts, commands, environment variables, and snapshots.
+- [Agent instructions](https://docs.capy.ai/configs/instructions.md): Use AGENTS.md and markdown instruction files to teach Capy's Build, Captain, and Review agents your codebase conventions — what gets loaded, when, and what belongs where.
+- [VM sandbox](https://docs.capy.ai/configs/runtime.md): What's inside Capy's task VMs — Ubuntu, preinstalled language runtimes and tools, and full Docker Engine and Compose support for containerized testing.
+- [Skills Configuration](https://docs.capy.ai/configs/skills.md): Create reusable skill packages that teach Capy agents specific workflows — store them in your repo and reference them from task prompts for consistent results.
+- [GitHub Integration](https://docs.capy.ai/integrations/github.md): Install the Capy GitHub App to connect repositories, manage branches automatically, and create pull requests from AI-generated code changes.
+- [Linear Integration](https://docs.capy.ai/integrations/linear.md): Connect Linear to Capy to delegate issues, route work by team mappings, and run tasks with configurable default project and branch behavior.
+- [Slack Integration](https://docs.capy.ai/integrations/slack.md): Connect Slack to Capy to create coding tasks directly from messages, sync conversation threads, and give agents full context from your workspace.
+- [Vercel Preview Deployments](https://docs.capy.ai/integrations/vercel.md): Capy detects Vercel preview deployments from PR comments and surfaces live previews in the dashboard alongside code diffs — no webhooks or API keys needed.
+- [Pricing, Plans, and Usage](https://docs.capy.ai/pricing.md): Capy Pro tiers from $20 to $2,000 per month, yearly discount, overage, auto-reload, and how billing works.
+- [Quickstart](https://docs.capy.ai/quickstart.md): Get started with Capy in 5 minutes — create an account, connect a GitHub repository, start your first AI coding task, and review the generated code.
+- [PR reviews](https://docs.capy.ai/review.md): Capy's Review agent reads pull request diffs, analyzes changes, and posts structured findings as inline GitHub comments — categorized by type and severity.
+- [Support](https://docs.capy.ai/support.md): Contact the Capy support team through the app or by email.
+- [Capy 101](https://docs.capy.ai/using-capy.md): Learn how Capy works — create coding tasks, use Captain for planning and Build for execution, choose AI models, and review diffs before merging.
+- [Welcome to Capy](https://docs.capy.ai/welcome.md): Capy runs coding tasks for you. Describe what you want and an agent builds it in its own VM. Review the diff, create a PR, and move on.
+
+## OpenAPI Specs
+
+- [openapi](https://docs.capy.ai/openapi.json)
+
+## Optional
+
+- [Dashboard](https://capy.ai)
+- [Discord](https://discord.com/invite/capy)

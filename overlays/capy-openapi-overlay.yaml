@@ -1,0 +1,17 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Capy API
+  version: 1.0.0
+extends: openapi/capy-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enriched: '2026-07-18'
+    x-apievangelist-auth: bearer capy_xxxx
+    x-apievangelist-error-format: 'custom-json ({ error: { code, message } })'
+    x-apievangelist-pagination: cursor (limit + cursor -> items/nextCursor/hasMore)
+    x-apievangelist-idempotency: not-supported
+    x-apievangelist-compliance: SOC 2 Type II
+- target: $.servers
+  update:
+    description: Production base URL is https://capy.ai/api/v1/

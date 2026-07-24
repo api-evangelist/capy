@@ -1,0 +1,16 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/capy-openapi-original.json
+skills:
+- file: capy-run-coding-thread.md
+  name: Run a Capy coding thread
+  api: openapi/capy-openapi-original.json
+  operations: [listProjects, createAndStartThread, getThread, sendThreadMessage, listThreadMessages, stopThread]
+- file: capy-schedule-automation.md
+  name: Schedule a recurring Capy automation
+  api: openapi/capy-openapi-original.json
+  operations: [listProjects, listAutomations, createAutomation, getAutomation, updateAutomation, triggerAutomation, deleteAutomation]
+- file: capy-review-task-diff.md
+  name: Inspect a Capy task and its diff
+  api: openapi/capy-openapi-original.json
+  operations: [listThreads, getThread, getTask, getTaskDiff]

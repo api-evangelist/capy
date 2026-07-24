@@ -1,21 +1,359 @@
 aid: capy
 name: Capy
-description: 'Capy is a company surfaced as a portfolio company of crv and added to the API Evangelist
-  network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the enrichment pipeline.'
+description: >-
+  Capy is an AI software-engineering platform that orchestrates a fleet of cloud
+  coding agents inside the apps a team already uses (Slack, Linear, GitHub). Each
+  task runs in its own isolated Ubuntu VM where a captain agent plans and build
+  agents execute — writing code, running end-to-end browser tests, migrating
+  codebases, generating docs, triaging and fixing bugs, and opening pull requests
+  for review. Capy supports multiple frontier models (GPT, Claude, Grok, Gemini)
+  and exposes a REST API (bearer capy_ token) plus scheduled and webhook-triggered
+  automations. Backed by CRV; SOC 2 Type II certified.
 url: https://raw.githubusercontent.com/api-evangelist/capy/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - crv
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: enriched-from-openapi
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://capy.ai/_marketing/opengraph-image.png
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
 - Ai
-apis: []
+- AI Coding Agent
+- Software Engineering
+- Developer Tools
+- Automation
+- Code Review
+- DevOps
+apis:
+- aid: capy:capy-automations-api
+  name: Capy automations API
+  description: The automations API from Capy — 3 operation(s) for automations.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - automations
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-automations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-browser-snapshots-api
+  name: Capy browser-snapshots API
+  description: The browser-snapshots API from Capy — 2 operation(s) for browser-snapshots.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - browser-snapshots
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-browser-snapshots-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-environment-variables-api
+  name: Capy environment-variables API
+  description: The environment-variables API from Capy — 2 operation(s) for environment-variables.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - environment-variables
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-environment-variables-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-models-api
+  name: Capy models API
+  description: The models API from Capy — 1 operation(s) for models.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - models
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-models-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-projects-api
+  name: Capy projects API
+  description: The projects API from Capy — 2 operation(s) for projects.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - projects
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-projects-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-sessions-api
+  name: Capy sessions API
+  description: The sessions API from Capy — 1 operation(s) for sessions.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-setup-api
+  name: Capy setup API
+  description: The setup API from Capy — 1 operation(s) for setup.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - setup
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-setup-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-snapshots-api
+  name: Capy snapshots API
+  description: The snapshots API from Capy — 1 operation(s) for snapshots.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - snapshots
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-snapshots-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-tags-api
+  name: Capy tags API
+  description: The tags API from Capy — 2 operation(s) for tags.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - tags
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-tags-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-tasks-api
+  name: Capy tasks API
+  description: The tasks API from Capy — 2 operation(s) for tasks.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-threads-api
+  name: Capy threads API
+  description: The threads API from Capy — 8 operation(s) for threads.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - threads
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-threads-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
+- aid: capy:capy-usage-api
+  name: Capy usage API
+  description: The usage API from Capy — 1 operation(s) for usage.
+  humanURL: https://docs.capy.ai/api-reference/overview
+  baseURL: https://capy.ai/api/v1/
+  tags:
+  - usage
+  properties:
+  - type: OpenAPI
+    url: openapi/capy-usage-api-openapi.yml
+  - type: Documentation
+    url: https://docs.capy.ai
+  - type: APIReference
+    url: https://docs.capy.ai/api-reference/overview
+  - type: Authentication
+    url: authentication/capy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/capy-problem-types.yml
+  - type: Conventions
+    url: conventions/capy-conventions.yml
+  - type: DataModel
+    url: data-model/capy-data-model.yml
+  - type: Conformance
+    url: conformance/capy-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/capy-lifecycle.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -24,3 +362,58 @@ maintainers:
 common:
 - type: Website
   url: https://capy.ai/
+- type: DeveloperPortal
+  url: https://docs.capy.ai
+- type: Documentation
+  url: https://docs.capy.ai
+- type: APIReference
+  url: https://docs.capy.ai/api-reference/overview
+- type: GettingStarted
+  url: https://docs.capy.ai/quickstart
+- type: Support
+  url: https://docs.capy.ai/support
+- type: Blog
+  url: https://capy.ai/blog
+- type: Pricing
+  url: https://capy.ai/pricing
+- type: SignUp
+  url: https://capy.ai/sign-up
+- type: TermsOfService
+  url: https://capy.ai/terms-of-service
+- type: PrivacyPolicy
+  url: https://capy.ai/privacy-policy
+- type: Authentication
+  url: authentication/capy-authentication.yml
+- type: Conventions
+  url: conventions/capy-conventions.yml
+- type: ErrorCatalog
+  url: errors/capy-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/capy-lifecycle.yml
+- type: DataModel
+  url: data-model/capy-data-model.yml
+- type: Conformance
+  url: conformance/capy-conformance.yml
+- type: Compliance
+  url: https://trust.capy.ai
+- type: MCPServer
+  url: mcp/capy-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/capy-llms.txt
+- type: AgenticAccess
+  url: agentic-access/capy-agentic-access.yml
+- type: TrustCenter
+  url: security/capy-trust-center.yml
+- type: Security
+  url: https://capy.ai/security
+- type: VulnerabilityDisclosure
+  url: security/capy-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/capy-domain-security.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

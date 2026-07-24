@@ -1,0 +1,28 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/capy-openapi-original.json
+docs: https://capy.ai/security
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: openapi/capy-openapi-original.json declares openapi 3.1.0
+- id: oauth2
+  conforms: false
+  evidence: only http bearer (static API token capy_xxxx) is used; no oauth2 scheme
+- id: oidc
+  conforms: false
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'errors use a custom { error: { code, message } } envelope, not application/problem+json'
+- id: cursor-pagination
+  conforms: true
+  evidence: list endpoints use limit + cursor with items/nextCursor/hasMore
+- id: rfc8594-deprecation-sunset
+  conforms: false
+  evidence: no Deprecation/Sunset header contract documented
+- id: idempotency-key
+  conforms: false
+  evidence: no Idempotency-Key header documented or present in the spec
+- id: soc2-type-ii
+  conforms: true
+  evidence: SOC 2 Type II certification published at capy.ai/security and trust.capy.ai

@@ -1,0 +1,77 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/capy-openapi-original.json
+entities:
+- name: Project
+  description: A connected repository workspace; the top-level container for threads, tasks, automations, snapshots and tags.
+  id_field: id
+- name: Thread
+  description: A captain thread — a conversational planning/execution session scoped to a project.
+  id_field: id
+- name: Task
+  description: A unit of coding work generated within a thread; produces a diff and optionally a pull request.
+  id_field: id
+  id_formats: [uuid, human-identifier (SCO-123)]
+- name: Message
+  description: A message within a captain thread.
+  id_field: id
+- name: Automation
+  description: A scheduled or webhook/integration-triggered recurring coding task on a project.
+  id_field: id
+- name: BrowserSnapshot
+  description: Saved authenticated browser state (cookies + localStorage) injected into agent sessions.
+  id_field: id
+- name: ThreadTag
+  description: A reusable, organization-scoped tag applied to captain threads.
+  id_field: name
+- name: Setup
+  description: A project's dev-environment configuration (VM size, scripts, hooks).
+- name: Snapshots
+  description: Toggle for optional cached VM state on a project.
+- name: Model
+  description: An AI model available to the API, with provider and pricing.
+relationships:
+- from: Thread
+  to: Project
+  type: belongs_to
+  via: projectId
+- from: Thread
+  to: Task
+  type: has_many
+  via: tasks
+- from: Thread
+  to: Message
+  type: has_many
+  via: messages (listThreadMessages)
+- from: Thread
+  to: ThreadTag
+  type: has_many
+  via: tags
+- from: Task
+  to: Project
+  type: belongs_to
+  via: projectId
+- from: Task
+  to: Thread
+  type: belongs_to
+  via: threadId
+- from: Automation
+  to: Project
+  type: belongs_to
+  via: projectId
+- from: BrowserSnapshot
+  to: Project
+  type: belongs_to
+  via: projectId
+- from: ThreadTag
+  to: Project
+  type: belongs_to
+  via: project organization
+- from: Setup
+  to: Project
+  type: belongs_to
+  via: projectId
+- from: Snapshots
+  to: Project
+  type: belongs_to
+  via: projectId

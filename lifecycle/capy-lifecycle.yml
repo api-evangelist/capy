@@ -1,0 +1,21 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/capy-openapi-original.json
+docs: https://docs.capy.ai/api-reference/overview
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://capy.ai/api/v1/
+deprecation:
+  policy_documented: false
+  sunset_header: false
+  note: No public deprecation policy or RFC 8594 Sunset/Deprecation header contract found.
+sla:
+  url: https://capy.ai/security
+  note: >-
+    SOC 2 Type II covers availability; no numeric uptime SLA published. Enterprise
+    support (24/7) is offered on higher tiers.
+status_page:
+  found: false
+  note: No status.capy.ai or /status page found (both returned 404 on 2026-07-18).
+deprecated_operations: []

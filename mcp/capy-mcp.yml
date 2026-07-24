@@ -1,0 +1,123 @@
+generated: '2026-07-18'
+method: derived
+status: candidate
+source: openapi/capy-openapi-original.json
+note: No official hosted MCP server was found for Capy as of 2026-07-18. This is a CANDIDATE tool surface
+  derived one-tool-per-operation from the OpenAPI, for forge/eval only.
+server:
+  name: capy
+  transport: http
+  base_url: https://capy.ai/api/v1/
+  auth: bearer capy_xxxx
+tools:
+- name: listThreads
+  description: List threads
+  source_operation: openapi/capy-openapi-original.json#listThreads
+- name: createAndStartThread
+  description: Create and start thread
+  source_operation: openapi/capy-openapi-original.json#createAndStartThread
+- name: getThread
+  description: Get thread
+  source_operation: openapi/capy-openapi-original.json#getThread
+- name: stopThread
+  description: Stop thread
+  source_operation: openapi/capy-openapi-original.json#stopThread
+- name: archiveThread
+  description: Archive thread
+  source_operation: openapi/capy-openapi-original.json#archiveThread
+- name: unarchiveThread
+  description: Unarchive thread
+  source_operation: openapi/capy-openapi-original.json#unarchiveThread
+- name: getThreadSessionToken
+  description: Get session token
+  source_operation: openapi/capy-openapi-original.json#getThreadSessionToken
+- name: sendThreadMessage
+  description: Send thread message
+  source_operation: openapi/capy-openapi-original.json#sendThreadMessage
+- name: listThreadMessages
+  description: List thread messages
+  source_operation: openapi/capy-openapi-original.json#listThreadMessages
+- name: setThreadTags
+  description: Set thread tags
+  source_operation: openapi/capy-openapi-original.json#setThreadTags
+- name: getTask
+  description: Get task
+  source_operation: openapi/capy-openapi-original.json#getTask
+- name: getTaskDiff
+  description: Get task diff
+  source_operation: openapi/capy-openapi-original.json#getTaskDiff
+- name: listProjects
+  description: List projects
+  source_operation: openapi/capy-openapi-original.json#listProjects
+- name: getProject
+  description: Get project
+  source_operation: openapi/capy-openapi-original.json#getProject
+- name: listThreadTags
+  description: List tags
+  source_operation: openapi/capy-openapi-original.json#listThreadTags
+- name: createThreadTag
+  description: Create tag
+  source_operation: openapi/capy-openapi-original.json#createThreadTag
+- name: listModels
+  description: List models
+  source_operation: openapi/capy-openapi-original.json#listModels
+- name: getUsage
+  description: Get usage
+  source_operation: openapi/capy-openapi-original.json#getUsage
+- name: getSetup
+  description: Get setup
+  source_operation: openapi/capy-openapi-original.json#getSetup
+- name: updateSetup
+  description: Update setup
+  source_operation: openapi/capy-openapi-original.json#updateSetup
+- name: getSnapshots
+  description: Get snapshots setting
+  source_operation: openapi/capy-openapi-original.json#getSnapshots
+- name: updateSnapshots
+  description: Update snapshots setting
+  source_operation: openapi/capy-openapi-original.json#updateSnapshots
+- name: listBrowserSnapshots
+  description: List browser snapshots
+  source_operation: openapi/capy-openapi-original.json#listBrowserSnapshots
+- name: createBrowserSnapshot
+  description: Create browser snapshot
+  source_operation: openapi/capy-openapi-original.json#createBrowserSnapshot
+- name: getBrowserSnapshot
+  description: Get browser snapshot
+  source_operation: openapi/capy-openapi-original.json#getBrowserSnapshot
+- name: updateBrowserSnapshot
+  description: Update browser snapshot
+  source_operation: openapi/capy-openapi-original.json#updateBrowserSnapshot
+- name: deleteBrowserSnapshot
+  description: Delete browser snapshot
+  source_operation: openapi/capy-openapi-original.json#deleteBrowserSnapshot
+- name: listPersonalEnvironmentVariables
+  description: List personal environment variables
+  source_operation: openapi/capy-openapi-original.json#listPersonalEnvironmentVariables
+- name: upsertPersonalEnvironmentVariables
+  description: Upsert personal environment variables
+  source_operation: openapi/capy-openapi-original.json#upsertPersonalEnvironmentVariables
+- name: deletePersonalEnvironmentVariable
+  description: Delete personal environment variable
+  source_operation: openapi/capy-openapi-original.json#deletePersonalEnvironmentVariable
+- name: listAutomations
+  description: List automations
+  source_operation: openapi/capy-openapi-original.json#listAutomations
+- name: createAutomation
+  description: Create automation
+  source_operation: openapi/capy-openapi-original.json#createAutomation
+- name: getAutomation
+  description: Get automation
+  source_operation: openapi/capy-openapi-original.json#getAutomation
+- name: updateAutomation
+  description: Update automation
+  source_operation: openapi/capy-openapi-original.json#updateAutomation
+- name: deleteAutomation
+  description: Delete automation
+  source_operation: openapi/capy-openapi-original.json#deleteAutomation
+- name: triggerAutomation
+  description: Trigger automation
+  source_operation: openapi/capy-openapi-original.json#triggerAutomation
+- name: verifySession
+  description: Verify session token
+  source_operation: openapi/capy-openapi-original.json#verifySession
