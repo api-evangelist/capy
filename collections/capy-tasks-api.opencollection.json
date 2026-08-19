@@ -1,0 +1,75 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Capy automations tasks API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "tasks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get task",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/tasks/:taskId",
+            "params": [
+              {
+                "name": "taskId",
+                "value": "550e8400-e29b-41d4-a716-446655440000",
+                "type": "path",
+                "description": "Task UUID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a task by UUID."
+        },
+        {
+          "info": {
+            "name": "Get task diff",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/tasks/:taskId/diff",
+            "params": [
+              {
+                "name": "taskId",
+                "value": "550e8400-e29b-41d4-a716-446655440000",
+                "type": "path",
+                "description": "Task UUID."
+              },
+              {
+                "name": "mode",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the current diff for a task by UUID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

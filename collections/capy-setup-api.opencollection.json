@@ -1,0 +1,79 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Capy automations setup API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "setup",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get setup",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/projects/:projectId/setup",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Setup used for future project runs. Setup contains VM size, three automatic repository scripts, opt-in Commands, terminals, previews, and pre/post tool hooks. Environment variables are configured separately."
+        },
+        {
+          "info": {
+            "name": "Update setup",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://capy.ai/api/v1/projects/:projectId/setup",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "replaceLegacyHooks",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Save Setup for future project runs. The update becomes active immediately; secret and environment variable fields are not accepted."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

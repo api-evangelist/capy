@@ -121,3 +121,9 @@ tools:
 - name: verifySession
   description: Verify session token
   source_operation: openapi/capy-openapi-original.json#verifySession
+deployment:
+  mode: none
+  verified: derived
+  tools: 37
+  checked: '2026-08-12'
+  source: catalog MCP census

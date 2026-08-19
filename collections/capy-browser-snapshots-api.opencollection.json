@@ -1,0 +1,165 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Capy automations browser-snapshots API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "browser-snapshots",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List browser snapshots",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/projects/:projectId/browser-snapshots",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List browser snapshots for a project. Private snapshots are only visible to their creator."
+        },
+        {
+          "info": {
+            "name": "Create browser snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/projects/:projectId/browser-snapshots",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new browser snapshot with cookies and localStorage state. Domains are automatically extracted from cookie domains."
+        },
+        {
+          "info": {
+            "name": "Get browser snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/projects/:projectId/browser-snapshots/:snapshotId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "Browser snapshot ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a browser snapshot by ID including its full storage state."
+        },
+        {
+          "info": {
+            "name": "Update browser snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://capy.ai/api/v1/projects/:projectId/browser-snapshots/:snapshotId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "Browser snapshot ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update browser snapshot metadata. Only the snapshot creator can change the isPrivate flag."
+        },
+        {
+          "info": {
+            "name": "Delete browser snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://capy.ai/api/v1/projects/:projectId/browser-snapshots/:snapshotId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "Browser snapshot ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a browser snapshot."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

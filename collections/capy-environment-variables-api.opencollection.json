@@ -1,0 +1,118 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Capy automations environment-variables API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "environment-variables",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List personal environment variables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/projects/:projectId/environment-variables/personal",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "impersonateUserEmail",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List names and configuration metadata for the effective actor's personal project environment variables. Secret values are never returned. Admin service users may explicitly target a same-organization project member with impersonateUserEmail."
+        },
+        {
+          "info": {
+            "name": "Upsert personal environment variables",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://capy.ai/api/v1/projects/:projectId/environment-variables/personal",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "impersonateUserEmail",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Bulk-upsert personal project environment variables for the effective actor. Omitted variables are preserved and secret values are never returned. Admin service users may explicitly target a same-organization project member with impersonateUserEmail."
+        },
+        {
+          "info": {
+            "name": "Delete personal environment variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://capy.ai/api/v1/projects/:projectId/environment-variables/personal/:name",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "name",
+                "value": "MY_TOKEN",
+                "type": "path",
+                "description": "Environment variable name."
+              },
+              {
+                "name": "impersonateUserEmail",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete one personal project environment variable for the effective actor. The name path segment must be URL encoded. Admin service users may explicitly target a same-organization project member with impersonateUserEmail."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

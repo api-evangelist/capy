@@ -1,0 +1,244 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Capy automations API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "automations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List automations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/projects/:projectId/automations",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "impersonateUserEmail",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "includeDisabled",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "enabled",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List project automations visible to the effective actor. Creator-scoped automations are private to their creator. Admin service users may explicitly target a same-organization project member with impersonateUserEmail."
+        },
+        {
+          "info": {
+            "name": "Create automation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/projects/:projectId/automations",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "impersonateUserEmail",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create an automation owned by the effective actor. Admin service users may create on behalf of a same-organization project member only with the explicit impersonateUserEmail query parameter."
+        },
+        {
+          "info": {
+            "name": "Get automation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/projects/:projectId/automations/:automationId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "automationId",
+                "value": "",
+                "type": "path",
+                "description": "Automation ID."
+              },
+              {
+                "name": "impersonateUserEmail",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get an automation visible to the effective actor. Creator-scoped automations are private to their creator."
+        },
+        {
+          "info": {
+            "name": "Update automation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://capy.ai/api/v1/projects/:projectId/automations/:automationId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "automationId",
+                "value": "",
+                "type": "path",
+                "description": "Automation ID."
+              },
+              {
+                "name": "impersonateUserEmail",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Partially update an automation visible to the effective actor. Creator-private ownership is enforced."
+        },
+        {
+          "info": {
+            "name": "Delete automation",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://capy.ai/api/v1/projects/:projectId/automations/:automationId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "automationId",
+                "value": "",
+                "type": "path",
+                "description": "Automation ID."
+              },
+              {
+                "name": "impersonateUserEmail",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete an automation visible to the effective actor. Creator-private ownership is enforced."
+        },
+        {
+          "info": {
+            "name": "Trigger automation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/projects/:projectId/automations/:automationId/trigger",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "automationId",
+                "value": "",
+                "type": "path",
+                "description": "Automation ID."
+              },
+              {
+                "name": "impersonateUserEmail",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Run an automation now as its immutable creator. The caller must be able to view the automation; service tokens never silently inherit a human identity."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

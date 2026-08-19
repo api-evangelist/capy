@@ -1,0 +1,323 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Capy automations threads API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "threads",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List threads",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/threads",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "prNumber",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "branch",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "slackThreadTs",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "authorId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "authorEmail",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "participantId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "participantEmail",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "origin",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "prState",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "tag",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "slackChannelId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List captain threads for a project."
+        },
+        {
+          "info": {
+            "name": "Create and start thread",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/threads",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new captain thread and immediately start execution, optionally assigning existing project tags."
+        },
+        {
+          "info": {
+            "name": "Get thread",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/threads/:threadId",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "jam_123",
+                "type": "path",
+                "description": "Thread jam ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a single captain thread."
+        },
+        {
+          "info": {
+            "name": "Stop thread",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/threads/:threadId/stop",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "jam_123",
+                "type": "path",
+                "description": "Thread jam ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Stop an actively running captain thread."
+        },
+        {
+          "info": {
+            "name": "Archive thread",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/threads/:threadId/archive",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "jam_123",
+                "type": "path",
+                "description": "Thread jam ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Archive a captain thread. If the thread is actively running, the archive succeeds first and then the API attempts to stop the active run on a best-effort basis."
+        },
+        {
+          "info": {
+            "name": "Unarchive thread",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/threads/:threadId/unarchive",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "jam_123",
+                "type": "path",
+                "description": "Thread jam ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unarchive a captain thread. This does not restart or resume execution."
+        },
+        {
+          "info": {
+            "name": "Get session token",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/threads/:threadId/session-token",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "jam_123",
+                "type": "path",
+                "description": "Thread jam ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch the current session identity token for a captain thread. The caller must have access to the project that owns the thread. The same token is also written inside the captain VM to `/etc/capy/session-token` with permissions `0600`, so code running inside the VM can read it locally. A `410` response means the session has already ended. A `422` response with code `session_not_ready` means the token has not been minted yet during initial bootstrap; retry with backoff."
+        },
+        {
+          "info": {
+            "name": "Send thread message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/threads/:threadId/message",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "jam_123",
+                "type": "path",
+                "description": "Thread jam ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send a message to an existing thread."
+        },
+        {
+          "info": {
+            "name": "List thread messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/threads/:threadId/messages",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "jam_123",
+                "type": "path",
+                "description": "Thread jam ID."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List messages in a captain thread."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

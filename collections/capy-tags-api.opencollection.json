@@ -1,0 +1,101 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Capy automations tags API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "tags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Set thread tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://capy.ai/api/v1/threads/:threadId/tags",
+            "params": [
+              {
+                "name": "threadId",
+                "value": "jam_123",
+                "type": "path",
+                "description": "Thread jam ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Replace the tags assigned to a captain thread. Every tag must already be defined for the project's organization."
+        },
+        {
+          "info": {
+            "name": "List tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://capy.ai/api/v1/projects/:projectId/tags",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List reusable captain-thread tags defined for the project's organization."
+        },
+        {
+          "info": {
+            "name": "Create tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/projects/:projectId/tags",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "proj_123",
+                "type": "path",
+                "description": "Project ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a reusable captain-thread tag for the project's organization. Reusing an existing tag name restores it and updates its color."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

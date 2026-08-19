@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Capy automations sessions API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Verify session token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://capy.ai/api/v1/sessions/verify",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Verify a session identity token issued for a captain session. The caller must have access to the project that owns the session so the endpoint cannot be used for cross-tenant enumeration. Failure responses are intentionally opaque: only `expired` is distinguished from `invalid`, and callers should always confirm the returned `projectId` matches the project they expect before trusting the result."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
