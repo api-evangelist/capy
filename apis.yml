@@ -34,6 +34,15 @@ created: '2026-07-17'
 modified: '2026-07-18'
 tags:
 - Company
+- Artificial Intelligence
+- AI Coding Agent
+- Software Engineering
+- Developer Tools
+- Automation
+- Code Review
+- DevOps
+tags_raw:
+- Company
 - Ai
 - AI Coding Agent
 - Software Engineering
@@ -48,6 +57,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Automations
+  tags_raw:
   - automations
   properties:
   - type: OpenAPI
@@ -100,6 +111,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Environment Variables
+  tags_raw:
   - environment-variables
   properties:
   - type: OpenAPI
@@ -126,6 +139,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Models
+  tags_raw:
   - models
   properties:
   - type: OpenAPI
@@ -152,6 +167,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Project
+  tags_raw:
   - projects
   properties:
   - type: OpenAPI
@@ -178,6 +195,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Sessions
+  tags_raw:
   - sessions
   properties:
   - type: OpenAPI
@@ -204,6 +223,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Setup
+  tags_raw:
   - setup
   properties:
   - type: OpenAPI
@@ -230,6 +251,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Snapshots
+  tags_raw:
   - snapshots
   properties:
   - type: OpenAPI
@@ -256,6 +279,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Tags
+  tags_raw:
   - tags
   properties:
   - type: OpenAPI
@@ -282,6 +307,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Task
+  tags_raw:
   - tasks
   properties:
   - type: OpenAPI
@@ -308,6 +335,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Threads
+  tags_raw:
   - threads
   properties:
   - type: OpenAPI
@@ -334,6 +363,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Usage
+  tags_raw:
   - usage
   properties:
   - type: OpenAPI
