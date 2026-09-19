@@ -48,7 +48,7 @@ modified: '2026-07-18'
 tags:
 - Company
 - Artificial Intelligence
-- AI Coding Agent
+- AI Coding Agents
 - Software Engineering
 - Developer Tools
 - Automation
@@ -70,7 +70,7 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
-  - Automations
+  - Automation
   tags_raw:
   - automations
   properties:
