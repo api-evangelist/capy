@@ -1,13 +1,13 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Capy automations projects API
+  title: Capy Projects API
   version: 1.0.0
 servers:
 - url: https://capy.ai/api
 security:
 - bearerAuth: []
 tags:
-- name: projects
+- name: Projects
 paths:
   /v1/projects:
     get:
@@ -15,7 +15,7 @@ paths:
       summary: List projects
       description: List projects available to the API token.
       tags:
-      - projects
+      - Projects
       security:
       - bearerAuth: []
       parameters:
@@ -55,7 +55,7 @@ paths:
       summary: Get project
       description: Get a single project.
       tags:
-      - projects
+      - Projects
       security:
       - bearerAuth: []
       parameters:
@@ -84,37 +84,6 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 components:
-  responses:
-    InternalError:
-      description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     Project:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -155,6 +124,25 @@ components:
       - repos
       - createdAt
       - updatedAt
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
       additionalProperties: false
     ListProjectsResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -212,25 +200,37 @@ components:
       - nextCursor
       - hasMore
       additionalProperties: false
-    ErrorResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details: {}
-          required:
-          - code
-          - message
-          additionalProperties: false
-      required:
-      - error
-      additionalProperties: false
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     bearerAuth:
       type: http

@@ -1,13 +1,13 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Capy automations tags API
+  title: Capy Tags API
   version: 1.0.0
 servers:
 - url: https://capy.ai/api
 security:
 - bearerAuth: []
 tags:
-- name: tags
+- name: Tags
 paths:
   /v1/threads/{threadId}/tags:
     put:
@@ -15,7 +15,7 @@ paths:
       summary: Set thread tags
       description: Replace the tags assigned to a captain thread. Every tag must already be defined for the project's organization.
       tags:
-      - tags
+      - Tags
       security:
       - bearerAuth: []
       parameters:
@@ -55,7 +55,7 @@ paths:
       summary: List tags
       description: List reusable captain-thread tags defined for the project's organization.
       tags:
-      - tags
+      - Tags
       security:
       - bearerAuth: []
       parameters:
@@ -88,7 +88,7 @@ paths:
       summary: Create tag
       description: Create a reusable captain-thread tag for the project's organization. Reusing an existing tag name restores it and updates its color.
       tags:
-      - tags
+      - Tags
       security:
       - bearerAuth: []
       parameters:
@@ -130,12 +130,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     ValidationError:
       description: Validation error
       content:
@@ -148,6 +142,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     Unauthorized:
       description: Unauthorized
       content:
@@ -155,20 +155,65 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    SetThreadTagsBody:
+    SetThreadTagsResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
         tags:
-          maxItems: 20
           type: array
           items:
-            type: string
-            minLength: 1
-            maxLength: 64
-            pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 64
+                pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+              color:
+                type: string
+                enum:
+                - default
+                - primary
+                - success
+                - warning
+                - destructive
+                - blue
+                - purple
+                - pink
+                - orange
+                - lime
+            required:
+            - name
+            - color
+            additionalProperties: false
       required:
       - tags
+      additionalProperties: false
+    CreateThreadTagBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+        color:
+          type: string
+          enum:
+          - default
+          - primary
+          - success
+          - warning
+          - destructive
+          - blue
+          - purple
+          - pink
+          - orange
+          - lime
+      required:
+      - name
+      - color
       additionalProperties: false
     ListThreadTagsResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -204,59 +249,6 @@ components:
       required:
       - items
       additionalProperties: false
-    ErrorResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details: {}
-          required:
-          - code
-          - message
-          additionalProperties: false
-      required:
-      - error
-      additionalProperties: false
-    SetThreadTagsResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        tags:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                minLength: 1
-                maxLength: 64
-                pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
-              color:
-                type: string
-                enum:
-                - default
-                - primary
-                - success
-                - warning
-                - destructive
-                - blue
-                - purple
-                - pink
-                - orange
-                - lime
-            required:
-            - name
-            - color
-            additionalProperties: false
-      required:
-      - tags
-      additionalProperties: false
     ThreadTag:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -283,31 +275,39 @@ components:
       - name
       - color
       additionalProperties: false
-    CreateThreadTagBody:
+    ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
-        color:
-          type: string
-          enum:
-          - default
-          - primary
-          - success
-          - warning
-          - destructive
-          - blue
-          - purple
-          - pink
-          - orange
-          - lime
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
       required:
-      - name
-      - color
+      - error
+      additionalProperties: false
+    SetThreadTagsBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        tags:
+          maxItems: 20
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+      required:
+      - tags
       additionalProperties: false
   securitySchemes:
     bearerAuth:

@@ -1,13 +1,13 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Capy automations environment-variables API
+  title: Capy Environment Variables API
   version: 1.0.0
 servers:
 - url: https://capy.ai/api
 security:
 - bearerAuth: []
 tags:
-- name: environment-variables
+- name: Environment Variables
 paths:
   /v1/projects/{projectId}/environment-variables/personal:
     get:
@@ -15,7 +15,7 @@ paths:
       summary: List personal environment variables
       description: List names and configuration metadata for the effective actor's personal project environment variables. Secret values are never returned. Admin service users may explicitly target a same-organization project member with impersonateUserEmail.
       tags:
-      - environment-variables
+      - Environment Variables
       security:
       - bearerAuth: []
       parameters:
@@ -56,7 +56,7 @@ paths:
       summary: Upsert personal environment variables
       description: Bulk-upsert personal project environment variables for the effective actor. Omitted variables are preserved and secret values are never returned. Admin service users may explicitly target a same-organization project member with impersonateUserEmail.
       tags:
-      - environment-variables
+      - Environment Variables
       security:
       - bearerAuth: []
       parameters:
@@ -104,7 +104,7 @@ paths:
       summary: Delete personal environment variable
       description: Soft-delete one personal project environment variable for the effective actor. The name path segment must be URL encoded. Admin service users may explicitly target a same-organization project member with impersonateUserEmail.
       tags:
-      - environment-variables
+      - Environment Variables
       security:
       - bearerAuth: []
       parameters:
@@ -148,76 +148,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 components:
-  responses:
-    InternalError:
-      description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    UpsertPersonalEnvironmentVariablesBody:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        variables:
-          minItems: 1
-          maxItems: 100
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                minLength: 1
-                maxLength: 191
-                description: Shell environment variable name, limited to 191 characters by storage.
-              value:
-                type: string
-                maxLength: 100000
-            required:
-            - name
-            - value
-            additionalProperties: false
-      required:
-      - variables
-      additionalProperties: false
-    DeletePersonalEnvironmentVariableResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        deleted:
-          type: boolean
-        name:
-          type: string
-      required:
-      - deleted
-      - name
-      additionalProperties: false
     PersonalEnvironmentVariablesResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -247,6 +178,18 @@ components:
       required:
       - items
       additionalProperties: false
+    DeletePersonalEnvironmentVariableResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        deleted:
+          type: boolean
+        name:
+          type: string
+      required:
+      - deleted
+      - name
+      additionalProperties: false
     ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -266,6 +209,63 @@ components:
       required:
       - error
       additionalProperties: false
+    UpsertPersonalEnvironmentVariablesBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        variables:
+          minItems: 1
+          maxItems: 100
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 191
+                description: Shell environment variable name, limited to 191 characters by storage.
+              value:
+                type: string
+                maxLength: 100000
+            required:
+            - name
+            - value
+            additionalProperties: false
+      required:
+      - variables
+      additionalProperties: false
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     bearerAuth:
       type: http

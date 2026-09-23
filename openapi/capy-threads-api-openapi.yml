@@ -1,13 +1,13 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Capy automations threads API
+  title: Capy Threads API
   version: 1.0.0
 servers:
 - url: https://capy.ai/api
 security:
 - bearerAuth: []
 tags:
-- name: threads
+- name: Threads
 paths:
   /v1/threads:
     get:
@@ -15,7 +15,7 @@ paths:
       summary: List threads
       description: List captain threads for a project.
       tags:
-      - threads
+      - Threads
       security:
       - bearerAuth: []
       parameters:
@@ -159,7 +159,7 @@ paths:
       summary: Create and start thread
       description: Create a new captain thread and immediately start execution, optionally assigning existing project tags.
       tags:
-      - threads
+      - Threads
       security:
       - bearerAuth: []
       parameters: []
@@ -192,7 +192,7 @@ paths:
       summary: Get thread
       description: Get a single captain thread.
       tags:
-      - threads
+      - Threads
       security:
       - bearerAuth: []
       parameters:
@@ -226,7 +226,7 @@ paths:
       summary: Stop thread
       description: Stop an actively running captain thread.
       tags:
-      - threads
+      - Threads
       security:
       - bearerAuth: []
       parameters:
@@ -264,7 +264,7 @@ paths:
       summary: Archive thread
       description: Archive a captain thread. If the thread is actively running, the archive succeeds first and then the API attempts to stop the active run on a best-effort basis.
       tags:
-      - threads
+      - Threads
       security:
       - bearerAuth: []
       parameters:
@@ -304,7 +304,7 @@ paths:
       summary: Unarchive thread
       description: Unarchive a captain thread. This does not restart or resume execution.
       tags:
-      - threads
+      - Threads
       security:
       - bearerAuth: []
       parameters:
@@ -344,7 +344,7 @@ paths:
       summary: Get session token
       description: Fetch the current session identity token for a captain thread. The caller must have access to the project that owns the thread. The same token is also written inside the captain VM to `/etc/capy/session-token` with permissions `0600`, so code running inside the VM can read it locally. A `410` response means the session has already ended. A `422` response with code `session_not_ready` means the token has not been minted yet during initial bootstrap; retry with backoff.
       tags:
-      - threads
+      - Threads
       security:
       - bearerAuth: []
       parameters:
@@ -380,7 +380,7 @@ paths:
       summary: Send thread message
       description: Send a message to an existing thread.
       tags:
-      - threads
+      - Threads
       security:
       - bearerAuth: []
       parameters:
@@ -424,7 +424,7 @@ paths:
       summary: List thread messages
       description: List messages in a captain thread.
       tags:
-      - threads
+      - Threads
       security:
       - bearerAuth: []
       parameters:
@@ -467,21 +467,42 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   schemas:
-    StopThreadResponse:
+    ListMessagesResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - active
-          - idle
-          - archived
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              source:
+                type: string
+                enum:
+                - user
+                - assistant
+              content:
+                type: string
+              createdAt:
+                type: string
+            required:
+            - id
+            - source
+            - content
+            - createdAt
+            additionalProperties: false
+        nextCursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+        hasMore:
+          type: boolean
       required:
-      - id
-      - status
+      - items
+      - nextCursor
+      - hasMore
       additionalProperties: false
     SendThreadMessageBody:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -633,69 +654,6 @@ components:
       required:
       - message
       additionalProperties: false
-    ListThreadsResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ThreadListItem'
-        nextCursor:
-          anyOf:
-          - type: string
-          - type: 'null'
-        hasMore:
-          type: boolean
-      required:
-      - items
-      - nextCursor
-      - hasMore
-      additionalProperties: false
-    ErrorResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details: {}
-          required:
-          - code
-          - message
-          additionalProperties: false
-      required:
-      - error
-      additionalProperties: false
-    UnarchiveThreadBody:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        impersonateUserEmail:
-          type: string
-          format: email
-          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
-      additionalProperties: false
-    ArchiveThreadResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - active
-          - idle
-          - archived
-      required:
-      - id
-      - status
-      additionalProperties: false
     SessionTokenResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -715,43 +673,6 @@ components:
       - token
       - expiresAt
       - issuedAt
-      additionalProperties: false
-    ListMessagesResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              source:
-                type: string
-                enum:
-                - user
-                - assistant
-              content:
-                type: string
-              createdAt:
-                type: string
-            required:
-            - id
-            - source
-            - content
-            - createdAt
-            additionalProperties: false
-        nextCursor:
-          anyOf:
-          - type: string
-          - type: 'null'
-        hasMore:
-          type: boolean
-      required:
-      - items
-      - nextCursor
-      - hasMore
       additionalProperties: false
     ThreadListItem:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -957,6 +878,22 @@ components:
       - createdAt
       - updatedAt
       additionalProperties: false
+    StopThreadResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - idle
+          - archived
+      required:
+      - id
+      - status
+      additionalProperties: false
     ArchiveThreadBody:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -966,166 +903,14 @@ components:
           format: email
           pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
       additionalProperties: false
-    CreateThreadResponse:
+    UnarchiveThreadBody:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        id:
+        impersonateUserEmail:
           type: string
-        projectId:
-          type: string
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-        status:
-          type: string
-          enum:
-          - active
-          - idle
-          - archived
-          description: Coarse Captain run-loop status retained for compatibility. Prefer runState/waitingOn/blockedOn for completion and waiting UX.
-        runState:
-          type: string
-          enum:
-          - running
-          - stopping
-          - queued
-          - waiting
-          - blocked
-          - ready
-          - archived
-          description: Full computed execution state for the agent thread.
-        waitingOn:
-          type: array
-          items:
-            type: string
-            enum:
-            - task
-            - review
-            - ci
-            - timer
-            - worker
-          description: Async system dependencies expected to continue without user action.
-        blockedOn:
-          type: array
-          items:
-            type: string
-            enum:
-            - auth
-            - permission
-          description: User/integration gates required before progress can continue.
-        pendingWakeups:
-          type: integer
-          minimum: 0
-          maximum: 9007199254740991
-          description: Pending append-and-resume notifications waiting to be processed.
-        participants:
-          type: array
-          items:
-            type: object
-            properties:
-              userId:
-                type: string
-              userType:
-                type: string
-                enum:
-                - human
-                - service_user
-              firstParticipatedAt:
-                type: string
-              lastParticipatedAt:
-                type: string
-            required:
-            - userId
-            - userType
-            - firstParticipatedAt
-            - lastParticipatedAt
-            additionalProperties: false
-        tags:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                minLength: 1
-                maxLength: 64
-                pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
-              color:
-                type: string
-                enum:
-                - default
-                - primary
-                - success
-                - warning
-                - destructive
-                - blue
-                - purple
-                - pink
-                - orange
-                - lime
-            required:
-            - name
-            - color
-            additionalProperties: false
-        slack:
-          type: object
-          properties:
-            teamId:
-              type: string
-            channelId:
-              type: string
-            threadTs:
-              type: string
-            url:
-              type: string
-          required:
-          - teamId
-          - channelId
-          - threadTs
-          - url
-          additionalProperties: false
-        createdAt:
-          type: string
-      required:
-      - id
-      - projectId
-      - title
-      - status
-      - runState
-      - waitingOn
-      - blockedOn
-      - pendingWakeups
-      - participants
-      - tags
-      - createdAt
-      additionalProperties: false
-    SendMessageResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - sent
-          - queued
-          - pending
-        inputEventId:
-          type: string
-        timelineSequence:
-          type: string
-          pattern: ^(0|[1-9]\d*)$
-        appendState:
-          type: string
-          enum:
-          - inserted
-          - already_present
-      required:
-      - id
-      - status
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
       additionalProperties: false
     CreateThreadBody:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -1303,9 +1088,252 @@ components:
       - projectId
       - prompt
       additionalProperties: false
+    SendMessageResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - sent
+          - queued
+          - pending
+        inputEventId:
+          type: string
+        timelineSequence:
+          type: string
+          pattern: ^(0|[1-9]\d*)$
+        appendState:
+          type: string
+          enum:
+          - inserted
+          - already_present
+      required:
+      - id
+      - status
+      additionalProperties: false
+    CreateThreadResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - active
+          - idle
+          - archived
+          description: Coarse Captain run-loop status retained for compatibility. Prefer runState/waitingOn/blockedOn for completion and waiting UX.
+        runState:
+          type: string
+          enum:
+          - running
+          - stopping
+          - queued
+          - waiting
+          - blocked
+          - ready
+          - archived
+          description: Full computed execution state for the agent thread.
+        waitingOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - task
+            - review
+            - ci
+            - timer
+            - worker
+          description: Async system dependencies expected to continue without user action.
+        blockedOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - auth
+            - permission
+          description: User/integration gates required before progress can continue.
+        pendingWakeups:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+          description: Pending append-and-resume notifications waiting to be processed.
+        participants:
+          type: array
+          items:
+            type: object
+            properties:
+              userId:
+                type: string
+              userType:
+                type: string
+                enum:
+                - human
+                - service_user
+              firstParticipatedAt:
+                type: string
+              lastParticipatedAt:
+                type: string
+            required:
+            - userId
+            - userType
+            - firstParticipatedAt
+            - lastParticipatedAt
+            additionalProperties: false
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 64
+                pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+              color:
+                type: string
+                enum:
+                - default
+                - primary
+                - success
+                - warning
+                - destructive
+                - blue
+                - purple
+                - pink
+                - orange
+                - lime
+            required:
+            - name
+            - color
+            additionalProperties: false
+        slack:
+          type: object
+          properties:
+            teamId:
+              type: string
+            channelId:
+              type: string
+            threadTs:
+              type: string
+            url:
+              type: string
+          required:
+          - teamId
+          - channelId
+          - threadTs
+          - url
+          additionalProperties: false
+        createdAt:
+          type: string
+      required:
+      - id
+      - projectId
+      - title
+      - status
+      - runState
+      - waitingOn
+      - blockedOn
+      - pendingWakeups
+      - participants
+      - tags
+      - createdAt
+      additionalProperties: false
+    ListThreadsResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThreadListItem'
+        nextCursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+        hasMore:
+          type: boolean
+      required:
+      - items
+      - nextCursor
+      - hasMore
+      additionalProperties: false
+    ArchiveThreadResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - idle
+          - archived
+      required:
+      - id
+      - status
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
   responses:
+    Gone:
+      description: Gone
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: session_ended
+              message: Session has already ended
     NotFound:
       description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    TooManyRequests:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Conflict
       content:
         application/json:
           schema:
@@ -1322,36 +1350,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Gone:
-      description: Gone
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            error:
-              code: session_ended
-              message: Session has already ended
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    TooManyRequests:
-      description: Too many requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     InternalError:
       description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Conflict:
-      description: Conflict
       content:
         application/json:
           schema:

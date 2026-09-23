@@ -1,13 +1,13 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Capy automations models API
+  title: Capy Models API
   version: 1.0.0
 servers:
 - url: https://capy.ai/api
 security:
 - bearerAuth: []
 tags:
-- name: models
+- name: Models
 paths:
   /v1/models:
     get:
@@ -15,7 +15,7 @@ paths:
       summary: List models
       description: List models available to the API.
       tags:
-      - models
+      - Models
       security:
       - bearerAuth: []
       parameters: []
@@ -44,12 +44,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     ValidationError:
       description: Validation error
       content:
@@ -58,6 +52,12 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     NotFound:
       description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
       content:
         application/json:
           schema:

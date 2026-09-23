@@ -1,13 +1,13 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Capy automations sessions API
+  title: Capy Sessions API
   version: 1.0.0
 servers:
 - url: https://capy.ai/api
 security:
 - bearerAuth: []
 tags:
-- name: sessions
+- name: Sessions
 paths:
   /v1/sessions/verify:
     post:
@@ -15,7 +15,7 @@ paths:
       summary: Verify session token
       description: 'Verify a session identity token issued for a captain session. The caller must have access to the project that owns the session so the endpoint cannot be used for cross-tenant enumeration. Failure responses are intentionally opaque: only `expired` is distinguished from `invalid`, and callers should always confirm the returned `projectId` matches the project they expect before trusting the result.'
       tags:
-      - sessions
+      - Sessions
       security:
       - bearerAuth: []
       parameters: []
@@ -50,12 +50,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     ValidationError:
       description: Validation error
       content:
@@ -68,6 +62,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     Unauthorized:
       description: Unauthorized
       content:
@@ -75,17 +75,6 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    VerifySessionBody:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        token:
-          type: string
-          minLength: 1
-          maxLength: 8192
-      required:
-      - token
-      additionalProperties: false
     ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -153,6 +142,17 @@ components:
         - valid
         - reason
         additionalProperties: false
+    VerifySessionBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 1
+          maxLength: 8192
+      required:
+      - token
+      additionalProperties: false
   securitySchemes:
     bearerAuth:
       type: http

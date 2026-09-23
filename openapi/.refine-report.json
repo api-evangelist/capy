@@ -1,18 +1,7 @@
 {
   "provider": "capy",
   "sources": [
-    "capy-automations-api-openapi.yml",
-    "capy-browser-snapshots-api-openapi.yml",
-    "capy-environment-variables-api-openapi.yml",
-    "capy-models-api-openapi.yml",
-    "capy-projects-api-openapi.yml",
-    "capy-sessions-api-openapi.yml",
-    "capy-setup-api-openapi.yml",
-    "capy-snapshots-api-openapi.yml",
-    "capy-tags-api-openapi.yml",
-    "capy-tasks-api-openapi.yml",
-    "capy-threads-api-openapi.yml",
-    "capy-usage-api-openapi.yml"
+    "_original/capy-openapi-original.json"
   ],
   "outputs": [
     "capy-automations-api-openapi.yml",
@@ -31,6 +20,23 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "capy-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "capy-automations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-browser-snapshots-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-environment-variables-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-models-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-sessions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-setup-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-snapshots-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-threads-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "capy-usage-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
