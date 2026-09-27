@@ -88,37 +88,6 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 components:
-  responses:
-    InternalError:
-      description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -138,67 +107,6 @@ components:
           additionalProperties: false
       required:
       - error
-      additionalProperties: false
-    TaskDiffResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        stats:
-          type: object
-          properties:
-            files:
-              type: integer
-              minimum: -9007199254740991
-              maximum: 9007199254740991
-            additions:
-              type: integer
-              minimum: -9007199254740991
-              maximum: 9007199254740991
-            deletions:
-              type: integer
-              minimum: -9007199254740991
-              maximum: 9007199254740991
-          required:
-          - files
-          - additions
-          - deletions
-          additionalProperties: false
-        files:
-          type: array
-          items:
-            type: object
-            properties:
-              path:
-                type: string
-              state:
-                type: string
-              additions:
-                type: integer
-                minimum: -9007199254740991
-                maximum: 9007199254740991
-              deletions:
-                type: integer
-                minimum: -9007199254740991
-                maximum: 9007199254740991
-              patch:
-                type: string
-            required:
-            - path
-            - state
-            - additions
-            - deletions
-            - patch
-            additionalProperties: false
-        source:
-          type: string
-          enum:
-          - snapshot
-          - github
-          - summary
-      required:
-      - stats
-      - files
-      - source
       additionalProperties: false
     Task:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -278,6 +186,98 @@ components:
       - updatedAt
       - threadId
       additionalProperties: false
+    TaskDiffResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        stats:
+          type: object
+          properties:
+            files:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            additions:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            deletions:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+          required:
+          - files
+          - additions
+          - deletions
+          additionalProperties: false
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              state:
+                type: string
+              additions:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              deletions:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              patch:
+                type: string
+            required:
+            - path
+            - state
+            - additions
+            - deletions
+            - patch
+            additionalProperties: false
+        source:
+          type: string
+          enum:
+          - snapshot
+          - github
+          - summary
+      required:
+      - stats
+      - files
+      - source
+      additionalProperties: false
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     bearerAuth:
       type: http

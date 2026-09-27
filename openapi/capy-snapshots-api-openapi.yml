@@ -84,6 +84,34 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   schemas:
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
+      additionalProperties: false
+    Snapshots:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        enabled:
+          type: boolean
+      required:
+      - enabled
+      additionalProperties: false
     UpdateSnapshotsResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -108,15 +136,6 @@ components:
       required:
       - enabled
       additionalProperties: false
-    Snapshots:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        enabled:
-          type: boolean
-      required:
-      - enabled
-      additionalProperties: false
     UpdateSnapshotsBody:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -126,40 +145,15 @@ components:
       required:
       - enabled
       additionalProperties: false
-    ErrorResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details: {}
-          required:
-          - code
-          - message
-          additionalProperties: false
-      required:
-      - error
-      additionalProperties: false
   responses:
-    InternalError:
-      description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     NotFound:
       description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -170,8 +164,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Internal error
       content:
         application/json:
           schema:

@@ -68,7 +68,7 @@ tags_raw:
 - DevOps
 apis:
 - aid: capy:capy-automations-api
-  name: Capy automations API
+  name: Capy Automations API
   description: The automations API from Capy — 3 operation(s) for automations.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -96,7 +96,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-browser-snapshots-api
-  name: Capy browser-snapshots API
+  name: Capy Browser Snapshots API
   description: The browser-snapshots API from Capy — 2 operation(s) for browser-snapshots.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -122,7 +122,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-environment-variables-api
-  name: Capy environment-variables API
+  name: Capy Environment Variables API
   description: The environment-variables API from Capy — 2 operation(s) for environment-variables.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -150,7 +150,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-models-api
-  name: Capy models API
+  name: Capy Models API
   description: The models API from Capy — 1 operation(s) for models.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -178,7 +178,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-projects-api
-  name: Capy projects API
+  name: Capy Projects API
   description: The projects API from Capy — 2 operation(s) for projects.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -206,7 +206,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-sessions-api
-  name: Capy sessions API
+  name: Capy Sessions API
   description: The sessions API from Capy — 1 operation(s) for sessions.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -234,7 +234,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-setup-api
-  name: Capy setup API
+  name: Capy Setup API
   description: The setup API from Capy — 1 operation(s) for setup.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -262,7 +262,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-snapshots-api
-  name: Capy snapshots API
+  name: Capy Snapshots API
   description: The snapshots API from Capy — 1 operation(s) for snapshots.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -290,7 +290,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-tags-api
-  name: Capy tags API
+  name: Capy Tags API
   description: The tags API from Capy — 2 operation(s) for tags.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -318,7 +318,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-tasks-api
-  name: Capy tasks API
+  name: Capy Tasks API
   description: The tasks API from Capy — 2 operation(s) for tasks.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -346,7 +346,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-threads-api
-  name: Capy threads API
+  name: Capy Threads API
   description: The threads API from Capy — 8 operation(s) for threads.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
@@ -374,7 +374,7 @@ apis:
   - type: Lifecycle
     url: lifecycle/capy-lifecycle.yml
 - aid: capy:capy-usage-api
-  name: Capy usage API
+  name: Capy Usage API
   description: The usage API from Capy — 1 operation(s) for usage.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/

@@ -85,46 +85,6 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   schemas:
-    Project:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-        taskCode:
-          type: string
-        repos:
-          type: array
-          items:
-            type: object
-            properties:
-              repoFullName:
-                type: string
-              branch:
-                type: string
-            required:
-            - repoFullName
-            - branch
-            additionalProperties: false
-        createdAt:
-          type: string
-        updatedAt:
-          type: string
-      required:
-      - id
-      - name
-      - description
-      - taskCode
-      - repos
-      - createdAt
-      - updatedAt
-      additionalProperties: false
     ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -200,21 +160,55 @@ components:
       - nextCursor
       - hasMore
       additionalProperties: false
+    Project:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+        taskCode:
+          type: string
+        repos:
+          type: array
+          items:
+            type: object
+            properties:
+              repoFullName:
+                type: string
+              branch:
+                type: string
+            required:
+            - repoFullName
+            - branch
+            additionalProperties: false
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+      - id
+      - name
+      - description
+      - taskCode
+      - repos
+      - createdAt
+      - updatedAt
+      additionalProperties: false
   responses:
-    InternalError:
-      description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     NotFound:
       description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -225,8 +219,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Internal error
       content:
         application/json:
           schema:
