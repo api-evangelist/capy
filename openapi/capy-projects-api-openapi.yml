@@ -84,25 +84,77 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 components:
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    ErrorResponse:
+    Project:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details: {}
-          required:
-          - code
-          - message
-          additionalProperties: false
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+        taskCode:
+          type: string
+        repos:
+          type: array
+          items:
+            type: object
+            properties:
+              repoFullName:
+                type: string
+              branch:
+                type: string
+            required:
+            - repoFullName
+            - branch
+            additionalProperties: false
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
       required:
-      - error
+      - id
+      - name
+      - description
+      - taskCode
+      - repos
+      - createdAt
+      - updatedAt
       additionalProperties: false
     ListProjectsResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -160,77 +212,25 @@ components:
       - nextCursor
       - hasMore
       additionalProperties: false
-    Project:
+    ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        id:
-          type: string
-        name:
-          type: string
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-        taskCode:
-          type: string
-        repos:
-          type: array
-          items:
-            type: object
-            properties:
-              repoFullName:
-                type: string
-              branch:
-                type: string
-            required:
-            - repoFullName
-            - branch
-            additionalProperties: false
-        createdAt:
-          type: string
-        updatedAt:
-          type: string
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
       required:
-      - id
-      - name
-      - description
-      - taskCode
-      - repos
-      - createdAt
-      - updatedAt
+      - error
       additionalProperties: false
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalError:
-      description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     bearerAuth:
       type: http

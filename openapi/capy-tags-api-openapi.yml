@@ -123,6 +123,37 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 components:
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     SetThreadTagsResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -158,24 +189,72 @@ components:
       required:
       - tags
       additionalProperties: false
-    ErrorResponse:
+    SetThreadTagsBody:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details: {}
-          required:
-          - code
-          - message
-          additionalProperties: false
+        tags:
+          maxItems: 20
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
       required:
-      - error
+      - tags
+      additionalProperties: false
+    CreateThreadTagBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+        color:
+          type: string
+          enum:
+          - default
+          - primary
+          - success
+          - warning
+          - destructive
+          - blue
+          - purple
+          - pink
+          - orange
+          - lime
+      required:
+      - name
+      - color
+      additionalProperties: false
+    ThreadTag:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
+        color:
+          type: string
+          enum:
+          - default
+          - primary
+          - success
+          - warning
+          - destructive
+          - blue
+          - purple
+          - pink
+          - orange
+          - lime
+      required:
+      - name
+      - color
       additionalProperties: false
     ListThreadTagsResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -211,104 +290,25 @@ components:
       required:
       - items
       additionalProperties: false
-    ThreadTag:
+    ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
-        color:
-          type: string
-          enum:
-          - default
-          - primary
-          - success
-          - warning
-          - destructive
-          - blue
-          - purple
-          - pink
-          - orange
-          - lime
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
       required:
-      - name
-      - color
+      - error
       additionalProperties: false
-    CreateThreadTagBody:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
-        color:
-          type: string
-          enum:
-          - default
-          - primary
-          - success
-          - warning
-          - destructive
-          - blue
-          - purple
-          - pink
-          - orange
-          - lime
-      required:
-      - name
-      - color
-      additionalProperties: false
-    SetThreadTagsBody:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        tags:
-          maxItems: 20
-          type: array
-          items:
-            type: string
-            minLength: 1
-            maxLength: 64
-            pattern: ^[a-z0-9][a-z0-9_-]{0,63}$
-      required:
-      - tags
-      additionalProperties: false
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalError:
-      description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     bearerAuth:
       type: http
