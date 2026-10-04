@@ -407,6 +407,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/capy-capability-edges.yml
+  name: Capy Business Capability Map
 - type: Overlay
   url: overlays/capy-openapi-overlay.yaml
 - type: Website

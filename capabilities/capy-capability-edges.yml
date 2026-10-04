@@ -1,0 +1,26 @@
+slug: capy
+provider: Capy
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Environment Variables
+  spec_file: capy-environment-variables-api-openapi.yml
+  capability_id: BC-4210.60
+  capability_id_l1: BC-4210
+  capability_name: Configuration & Secrets Management
+  confidence: 0.75
+  evidence: PUT /v1/projects/{projectId}/environment-variables/personal Upsert personal environment variables;
+    DELETE .../personal/{name}
+  reason: Management of runtime configuration values (environment variables) consumed by project agent
+    runtimes maps to Configuration & Secrets Management; slight ambiguity only as to whether these are
+    treated as secrets.
