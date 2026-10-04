@@ -149,18 +149,6 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   schemas:
-    DeletePersonalEnvironmentVariableResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        deleted:
-          type: boolean
-        name:
-          type: string
-      required:
-      - deleted
-      - name
-      additionalProperties: false
     UpsertPersonalEnvironmentVariablesBody:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -186,6 +174,25 @@ components:
             additionalProperties: false
       required:
       - variables
+      additionalProperties: false
+    ErrorResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
+      required:
+      - error
       additionalProperties: false
     PersonalEnvironmentVariablesResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -216,34 +223,21 @@ components:
       required:
       - items
       additionalProperties: false
-    ErrorResponse:
+    DeletePersonalEnvironmentVariableResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details: {}
-          required:
-          - code
-          - message
-          additionalProperties: false
+        deleted:
+          type: boolean
+        name:
+          type: string
       required:
-      - error
+      - deleted
+      - name
       additionalProperties: false
   responses:
     ValidationError:
       description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
       content:
         application/json:
           schema:
@@ -254,14 +248,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     InternalError:
       description: Internal error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
+    Forbidden:
+      description: Forbidden
       content:
         application/json:
           schema:

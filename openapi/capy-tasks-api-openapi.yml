@@ -89,26 +89,14 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     ValidationError:
       description: Validation error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalError:
-      description: Internal error
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:
@@ -119,85 +107,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    Task:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        id:
-          type: string
-        projectId:
-          type: string
-        threadIndex:
-          anyOf:
-          - type: integer
-            minimum: -9007199254740991
-            maximum: 9007199254740991
-          - type: 'null'
-        identifier:
-          type: string
-        title:
-          type: string
-        prompt:
-          type: string
-        status:
-          type: string
-          enum:
-          - backlog
-          - queued
-          - in_progress
-          - needs_review
-          - completed
-          - error
-          - archived
-        pullRequest:
-          type: 'null'
-        slackThreads:
-          type: array
-          items:
-            type: object
-            properties:
-              teamId:
-                type: string
-              channelId:
-                type: string
-              threadTs:
-                type: string
-              url:
-                type: string
-            required:
-            - teamId
-            - channelId
-            - threadTs
-            - url
-            additionalProperties: false
-        currentJamId:
-          anyOf:
-          - type: string
-          - type: 'null'
-        createdAt:
-          type: string
-        updatedAt:
-          type: string
-        threadId:
-          anyOf:
-          - type: string
-          - type: 'null'
-      required:
-      - id
-      - projectId
-      - threadIndex
-      - identifier
-      - title
-      - prompt
-      - status
-      - pullRequest
-      - slackThreads
-      - currentJamId
-      - createdAt
-      - updatedAt
-      - threadId
-      additionalProperties: false
     ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -277,6 +199,84 @@ components:
       - stats
       - files
       - source
+      additionalProperties: false
+    Task:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        threadIndex:
+          anyOf:
+          - type: integer
+            minimum: -9007199254740991
+            maximum: 9007199254740991
+          - type: 'null'
+        identifier:
+          type: string
+        title:
+          type: string
+        prompt:
+          type: string
+        status:
+          type: string
+          enum:
+          - backlog
+          - queued
+          - in_progress
+          - needs_review
+          - completed
+          - error
+          - archived
+        pullRequest:
+          type: 'null'
+        slackThreads:
+          type: array
+          items:
+            type: object
+            properties:
+              teamId:
+                type: string
+              channelId:
+                type: string
+              threadTs:
+                type: string
+              url:
+                type: string
+            required:
+            - teamId
+            - channelId
+            - threadTs
+            - url
+            additionalProperties: false
+        currentJamId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        threadId:
+          anyOf:
+          - type: string
+          - type: 'null'
+      required:
+      - id
+      - projectId
+      - threadIndex
+      - identifier
+      - title
+      - prompt
+      - status
+      - pullRequest
+      - slackThreads
+      - currentJamId
+      - createdAt
+      - updatedAt
+      - threadId
       additionalProperties: false
   securitySchemes:
     bearerAuth:

@@ -44,20 +44,20 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     ValidationError:
       description: Validation error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -68,8 +68,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
+    Forbidden:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -123,17 +123,6 @@ components:
         - valid
         - reason
         additionalProperties: false
-    VerifySessionBody:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        token:
-          type: string
-          minLength: 1
-          maxLength: 8192
-      required:
-      - token
-      additionalProperties: false
     ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
@@ -152,6 +141,17 @@ components:
           additionalProperties: false
       required:
       - error
+      additionalProperties: false
+    VerifySessionBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 1
+          maxLength: 8192
+      required:
+      - token
       additionalProperties: false
   securitySchemes:
     bearerAuth:
