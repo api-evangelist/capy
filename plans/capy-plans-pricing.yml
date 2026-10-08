@@ -1,0 +1,84 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-07'
+method: searched
+source: https://capy.ai/pricing
+sources:
+- https://capy.ai/pricing
+provenance:
+  tool: all/0-working/economics/harvest_pricing.py
+  run: 20261007T104522
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-07'
+  managed_tier: Lite
+published: true
+note: Subscription tiers with included credit allowances; unlimited members, no per-seat fees. YC companies
+  get $1,000 in credits.
+plan_count: 8
+currency: USD
+plans:
+- name: Lite trial
+  price_text: Try Capy Lite for $1 for 7 days
+  price: 1
+  currency: USD
+  period: one-time
+  unit: 7 days
+  included_quota: Unlimited members, every agent, every model
+- name: Lite
+  price_text: $20/mo
+  price: 20
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: $20 credits; 128 GB concurrent RAM; cloud machines up to 4 CPU / 16 GB
+  overage: Add balance at 1:1 value ($1 = $1 of usage, $5 minimum)
+- name: Lite (annual)
+  price_text: $16/mo annual
+  price: 16
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: $20 credits
+- name: Pro
+  price_text: $100/mo
+  price: 100
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: $105 credits (+5% bonus); 512 GB concurrent RAM; up to 8 CPU / 32 GB
+  overage: Add balance at 1:1 value
+- name: Pro (annual)
+  price_text: $80/mo annual
+  price: 80
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: $105 credits
+- name: Max
+  price_text: $200+/mo
+  price: 200
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: $100 steps to $1,000; 110% of price in credits (+10%); 1 TB concurrent RAM; up to 16
+    CPU / 64 GB
+  overage: Add balance at 1:1 value
+- name: Max (annual)
+  price_text: $160–$800/mo
+  currency: USD
+  period: month
+  unit: plan
+  included_quota: 110% of price
+- name: Enterprise
+  price_text: Custom
+  period: none
+  included_quota: Custom credit quota, SSO/SAML, dedicated support, audit logging
+rate_limit_statements:
+- 128 GB concurrent RAM on cloud machines
+- 512 GB concurrent RAM on cloud machines
+- 1 TB concurrent RAM on cloud machines
+- Concurrent threads Unlimited
