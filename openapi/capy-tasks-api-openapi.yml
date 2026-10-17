@@ -89,8 +89,8 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   responses:
-    ValidationError:
-      description: Validation error
+    InternalError:
+      description: Internal error
       content:
         application/json:
           schema:
@@ -107,14 +107,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    InternalError:
-      description: Internal error
+    Forbidden:
+      description: Forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
+    ValidationError:
+      description: Validation error
       content:
         application/json:
           schema:
@@ -138,67 +138,6 @@ components:
           additionalProperties: false
       required:
       - error
-      additionalProperties: false
-    TaskDiffResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        stats:
-          type: object
-          properties:
-            files:
-              type: integer
-              minimum: -9007199254740991
-              maximum: 9007199254740991
-            additions:
-              type: integer
-              minimum: -9007199254740991
-              maximum: 9007199254740991
-            deletions:
-              type: integer
-              minimum: -9007199254740991
-              maximum: 9007199254740991
-          required:
-          - files
-          - additions
-          - deletions
-          additionalProperties: false
-        files:
-          type: array
-          items:
-            type: object
-            properties:
-              path:
-                type: string
-              state:
-                type: string
-              additions:
-                type: integer
-                minimum: -9007199254740991
-                maximum: 9007199254740991
-              deletions:
-                type: integer
-                minimum: -9007199254740991
-                maximum: 9007199254740991
-              patch:
-                type: string
-            required:
-            - path
-            - state
-            - additions
-            - deletions
-            - patch
-            additionalProperties: false
-        source:
-          type: string
-          enum:
-          - snapshot
-          - github
-          - summary
-      required:
-      - stats
-      - files
-      - source
       additionalProperties: false
     Task:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -277,6 +216,67 @@ components:
       - createdAt
       - updatedAt
       - threadId
+      additionalProperties: false
+    TaskDiffResponse:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        stats:
+          type: object
+          properties:
+            files:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            additions:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            deletions:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+          required:
+          - files
+          - additions
+          - deletions
+          additionalProperties: false
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              state:
+                type: string
+              additions:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              deletions:
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              patch:
+                type: string
+            required:
+            - path
+            - state
+            - additions
+            - deletions
+            - patch
+            additionalProperties: false
+        source:
+          type: string
+          enum:
+          - snapshot
+          - github
+          - summary
+      required:
+      - stats
+      - files
+      - source
       additionalProperties: false
   securitySchemes:
     bearerAuth:

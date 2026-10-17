@@ -148,51 +148,49 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 components:
+  responses:
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    UpsertPersonalEnvironmentVariablesBody:
+    DeletePersonalEnvironmentVariableResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        variables:
-          minItems: 1
-          maxItems: 100
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                minLength: 1
-                maxLength: 191
-                description: Shell environment variable name, limited to 191 characters by storage.
-              value:
-                type: string
-                maxLength: 100000
-            required:
-            - name
-            - value
-            additionalProperties: false
+        deleted:
+          type: boolean
+        name:
+          type: string
       required:
-      - variables
-      additionalProperties: false
-    ErrorResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details: {}
-          required:
-          - code
-          - message
-          additionalProperties: false
-      required:
-      - error
+      - deleted
+      - name
       additionalProperties: false
     PersonalEnvironmentVariablesResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
@@ -223,49 +221,51 @@ components:
       required:
       - items
       additionalProperties: false
-    DeletePersonalEnvironmentVariableResponse:
+    ErrorResponse:
       $schema: https://json-schema.org/draft/2020-12/schema
       type: object
       properties:
-        deleted:
-          type: boolean
-        name:
-          type: string
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details: {}
+          required:
+          - code
+          - message
+          additionalProperties: false
       required:
-      - deleted
-      - name
+      - error
       additionalProperties: false
-  responses:
-    ValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalError:
-      description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+    UpsertPersonalEnvironmentVariablesBody:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      properties:
+        variables:
+          minItems: 1
+          maxItems: 100
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 191
+                description: Shell environment variable name, limited to 191 characters by storage.
+              value:
+                type: string
+                maxLength: 100000
+            required:
+            - name
+            - value
+            additionalProperties: false
+      required:
+      - variables
+      additionalProperties: false
   securitySchemes:
     bearerAuth:
       type: http
