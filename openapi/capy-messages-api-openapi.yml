@@ -1,0 +1,903 @@
+openapi: 3.2.0
+info:
+  title: Capy Messages API
+  version: 1.0.0
+  description: Programmatic access to Capy's agent platform.
+servers:
+- url: https://api.capy.ai
+security:
+- bearerAuth: []
+tags:
+- name: Messages
+paths:
+  /api/v1/threads/{threadId}/messages:
+    get:
+      tags:
+      - Messages
+      operationId: messages.list
+      parameters:
+      - name: threadId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: after
+        in: query
+        schema:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+          description: Exclusive forward event-ID cursor from cursor. Without either bound, returns the oldest page.
+        required: false
+      - name: before
+        in: query
+        schema:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+          description: Exclusive backward event-ID cursor from beforeCursor. Without after, returns the nearest older page.
+        required: false
+      - name: limit
+        in: query
+        schema:
+          type: integer
+        required: false
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: TranscriptPage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptPageEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List thread messages
+  /api/v1/threads/{threadId}/message:
+    post:
+      tags:
+      - Messages
+      operationId: messages.send
+      parameters:
+      - name: threadId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: AdmitReceipt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmitReceiptEncoded'
+        '400':
+          description: ModelSelection.Rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSelection.RejectedEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/DeviceAccessDenied | capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_DeviceAccessDeniedEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '409':
+          description: capy/EditNotAllowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_EditNotAllowedEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+        required: true
+      summary: Send message
+  /api/v1/threads/{threadId}/messages/{eventId}/versions:
+    get:
+      tags:
+      - Messages
+      operationId: messages.versions
+      parameters:
+      - name: threadId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: eventId
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: MessageVersions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageVersionsEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Versions
+  /api/v1/threads/{threadId}/interrupt:
+    post:
+      tags:
+      - Messages
+      operationId: messages.interrupt
+      parameters:
+      - name: threadId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: AdmitReceipt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmitReceiptEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Interrupt thread
+  /api/v1/threads/{threadId}/messages/{eventId}/cancel:
+    post:
+      tags:
+      - Messages
+      operationId: messages.cancel
+      parameters:
+      - name: threadId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: eventId
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: CancelMessageOutcome
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelMessageOutcomeEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Cancel queued message
+  /api/v1/threads/{threadId}/messages/{eventId}/send-now:
+    post:
+      tags:
+      - Messages
+      operationId: messages.sendNow
+      parameters:
+      - name: threadId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: eventId
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: SendNowOutcome
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendNowOutcomeEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/DeviceAccessDenied | capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_DeviceAccessDeniedEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Send queued message now
+components:
+  schemas:
+    MessageEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+        source:
+          type: string
+          enum:
+          - user
+          - assistant
+          - tool
+        tool:
+          type: string
+        feedbackRequest:
+          type: object
+          properties:
+            toolCallId:
+              type: string
+            state:
+              type: string
+              enum:
+              - proposed
+              - sent
+              - declined
+          required:
+          - toolCallId
+          - state
+          additionalProperties: false
+        calls:
+          type: array
+          items:
+            type: object
+            properties:
+              tool:
+                type: string
+              durationMs:
+                anyOf:
+                - type: number
+                - type: string
+                  enum:
+                  - Infinity
+                  - -Infinity
+                  - NaN
+            required:
+            - tool
+            - durationMs
+            additionalProperties: false
+        text:
+          type: string
+        authorName:
+          type: string
+        sender:
+          $ref: '#/components/schemas/MessageSender'
+          description: 'On user entries another agent sent: the thread or subagent that sent it. Absent on messages a person, an integration, or an automation sent, and on the opening task a parent gives its subagent.'
+        clientKey:
+          type: string
+          minLength: 1
+          maxLength: 64
+        editOf:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        model:
+          type: string
+        callId:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: object
+            properties:
+              file:
+                type: object
+                properties:
+                  fileId:
+                    type: string
+                  name:
+                    type: string
+                  mediaType:
+                    type: string
+                  sizeBytes:
+                    anyOf:
+                    - type: number
+                    - type: string
+                      enum:
+                      - Infinity
+                      - -Infinity
+                      - NaN
+                  preview:
+                    type: boolean
+                  previewBytes:
+                    anyOf:
+                    - type: number
+                    - type: string
+                      enum:
+                      - Infinity
+                      - -Infinity
+                      - NaN
+                  width:
+                    anyOf:
+                    - type: number
+                    - type: string
+                      enum:
+                      - Infinity
+                      - -Infinity
+                      - NaN
+                  height:
+                    anyOf:
+                    - type: number
+                    - type: string
+                      enum:
+                      - Infinity
+                      - -Infinity
+                      - NaN
+                  pageCount:
+                    type: integer
+                    minimum: 1
+                  sourcePath:
+                    type: string
+                  contentSha:
+                    type: string
+                required:
+                - fileId
+                - name
+                - mediaType
+                - sizeBytes
+                additionalProperties: false
+              title:
+                type: string
+            required:
+            - file
+            additionalProperties: false
+        createdAt:
+          type: string
+      required:
+      - id
+      - source
+      - text
+      - createdAt
+      additionalProperties: false
+    MessageSender:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The sending thread's or subagent's id, the same id the threads and subagents endpoints take.
+        relation:
+          type: string
+          enum:
+          - parent
+          - ancestor
+          - captain
+          - peer
+          description: 'The sender''s relation to this thread: `parent` or `ancestor` owns this subagent, `captain` is the Captain directing this thread, and `peer` is any other thread, including a crew thread messaging its Captain.'
+      required:
+      - id
+      - relation
+      additionalProperties: false
+    capy_ThreadNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/ThreadNotFound
+        threadId:
+          type: string
+      required:
+      - _tag
+      - threadId
+      additionalProperties: false
+    CancelMessageOutcomeEncoded:
+      type: object
+      properties:
+        outcome:
+          type: string
+          enum:
+          - cancelled
+          - tooLate
+      required:
+      - outcome
+      additionalProperties: false
+    capy_DeviceAccessDeniedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/DeviceAccessDenied
+        deviceId:
+          type: string
+        deviceName:
+          type: string
+        status:
+          type: string
+          enum:
+          - requested
+          - denied
+          - revoked
+          - none
+        held:
+          type: boolean
+      required:
+      - _tag
+      - deviceId
+      - deviceName
+      - status
+      - held
+      additionalProperties: false
+    ModelSelection.RejectedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - ModelSelection.Rejected
+        message:
+          type: string
+        candidates:
+          type: array
+          items:
+            type: object
+            properties:
+              entryId:
+                type: string
+              name:
+                type: string
+              billingLabel:
+                type: string
+            required:
+            - entryId
+            - name
+            - billingLabel
+            additionalProperties: false
+        rejection:
+          type: string
+          enum:
+          - disconnected
+          - not_connected
+        modelId:
+          type: string
+        service:
+          type: string
+          enum:
+          - codex
+          - copilot
+          - supergrok
+          - claude
+        health:
+          type: object
+          properties:
+            state:
+              type: string
+              enum:
+              - connected
+              - not_connected
+              - signed_out
+              - disabled
+              - usage_exhausted
+            kind:
+              type: string
+              enum:
+              - subscription
+              - key
+            provider:
+              type: string
+            action:
+              type: string
+              enum:
+              - connect
+              - reconnect
+              - replace_key
+              - enable
+            resetsAt:
+              type: string
+          required:
+          - state
+          - kind
+          - provider
+          additionalProperties: false
+      required:
+      - _tag
+      - message
+      - candidates
+      additionalProperties: false
+    MessageVersionEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        text:
+          type: string
+        createdAt:
+          type: string
+        live:
+          type: boolean
+      required:
+      - id
+      - text
+      - createdAt
+      - live
+      additionalProperties: false
+    capy_RateLimitedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/RateLimited
+        retryAfterSeconds:
+          type: integer
+      required:
+      - _tag
+      - retryAfterSeconds
+      additionalProperties: false
+    MessageVersionsEncoded:
+      type: object
+      properties:
+        root:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageVersionEncoded'
+      required:
+      - root
+      - versions
+      additionalProperties: false
+    AdmitReceiptEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        deduped:
+          type: boolean
+      required:
+      - id
+      - deduped
+      additionalProperties: false
+    SendMessageRequest:
+      type: object
+      properties:
+        text:
+          type: string
+        model:
+          $ref: '#/components/schemas/ModelSelection'
+        delivery:
+          type: string
+          enum:
+          - queue
+          - steer
+          - interrupt
+          description: How the message reaches a working thread. `interrupt` (the default) cuts the running step and makes the message the next input; `steer` lands it at the agent's next step with nothing cancelled; `queue` waits until the current work finishes.
+        clientKey:
+          type: string
+          minLength: 1
+          maxLength: 64
+        editOf:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+          description: Resend one of your earlier messages as a new version. The thread resets to that message before the agent reads the new text; the rows after it stay stored and can be switched back to.
+        switchTo:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+          description: Make this superseded version of an edited message live before the send lands, so the message answers on that branch.
+        pullRequestAuthor:
+          anyOf:
+          - type: string
+            enum:
+            - user
+            - capy
+          - type: 'null'
+          description: 'Set the thread''s pull request author: `capy` or `user` sets it, null clears it back to the Git identity preference, and absent leaves it unchanged. It applies when the agent picks this message up, so a queued message never changes a pull request opened before it.'
+      required:
+      - text
+      additionalProperties: false
+    ModelSelection:
+      type: object
+      properties:
+        modelId:
+          type: string
+        reasoningMode:
+          type: string
+          enum:
+          - none
+          - instant
+          - minimal
+          - low
+          - medium
+          - high
+          - xhigh
+          - max
+        modes:
+          type: object
+          properties:
+            fast:
+              type: boolean
+            pro:
+              type: boolean
+            ultrafast:
+              type: boolean
+          additionalProperties: false
+      required:
+      - modelId
+      additionalProperties: false
+    capy_UnauthorizedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Unauthorized
+      required:
+      - _tag
+      additionalProperties: false
+    TranscriptPageEncoded:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageEncoded'
+        cursor:
+          anyOf:
+          - type: string
+            allOf:
+            - minLength: 26
+            - maxLength: 26
+          - type: 'null'
+          description: Opaque exclusive event-ID cursor for after. Stable across compaction. Null when no newer events remain. An unchanged cursor means unsettled messages still block forward paging. Retry after they settle.
+        beforeCursor:
+          anyOf:
+          - type: string
+            allOf:
+            - minLength: 26
+            - maxLength: 26
+          - type: 'null'
+          description: Opaque exclusive event-ID cursor for before. Stable across compaction. Null when no older events remain.
+      required:
+      - items
+      - cursor
+      - beforeCursor
+      additionalProperties: false
+    capy_ForbiddenEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Forbidden
+      required:
+      - _tag
+      additionalProperties: false
+    capy_EditNotAllowedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/EditNotAllowed
+        eventId:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        reason:
+          type: string
+          enum:
+          - not_settled
+          - not_author
+          - inherited
+          - not_version
+          - live
+      required:
+      - _tag
+      - eventId
+      - reason
+      additionalProperties: false
+    SendNowOutcomeEncoded:
+      type: object
+      properties:
+        outcome:
+          type: string
+          enum:
+          - sent
+          - tooLate
+        id:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+      required:
+      - outcome
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Capy API key
+      description: An API key created in Capy under Settings → API.

@@ -1,0 +1,541 @@
+openapi: 3.2.0
+info:
+  title: Capy Subagents API
+  version: 1.0.0
+  description: Programmatic access to Capy's agent platform.
+servers:
+- url: https://api.capy.ai
+security:
+- bearerAuth: []
+tags:
+- name: subagents
+paths:
+  /api/v1/threads/{threadId}/subagents:
+    get:
+      tags:
+      - subagents
+      operationId: subagents.list
+      parameters:
+      - name: threadId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: after
+        in: query
+        schema:
+          type: string
+        required: false
+      - name: limit
+        in: query
+        schema:
+          type: integer
+        required: false
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: SubagentPage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubagentPageEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List subagents
+  /api/v1/subagents/{subagentId}:
+    get:
+      tags:
+      - subagents
+      operationId: subagents.get
+      parameters:
+      - name: subagentId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Subagent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubagentEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/SubagentNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_SubagentNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Get subagent
+  /api/v1/subagents/{subagentId}/messages:
+    get:
+      tags:
+      - subagents
+      operationId: subagents.messages
+      parameters:
+      - name: subagentId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: after
+        in: query
+        schema:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        required: false
+      - name: limit
+        in: query
+        schema:
+          type: integer
+        required: false
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: MessagePage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePageEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/SubagentNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_SubagentNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List subagent messages
+components:
+  schemas:
+    MessageEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+        source:
+          type: string
+          enum:
+          - user
+          - assistant
+          - tool
+        tool:
+          type: string
+        feedbackRequest:
+          type: object
+          properties:
+            toolCallId:
+              type: string
+            state:
+              type: string
+              enum:
+              - proposed
+              - sent
+              - declined
+          required:
+          - toolCallId
+          - state
+          additionalProperties: false
+        calls:
+          type: array
+          items:
+            type: object
+            properties:
+              tool:
+                type: string
+              durationMs:
+                anyOf:
+                - type: number
+                - type: string
+                  enum:
+                  - Infinity
+                  - -Infinity
+                  - NaN
+            required:
+            - tool
+            - durationMs
+            additionalProperties: false
+        text:
+          type: string
+        authorName:
+          type: string
+        sender:
+          $ref: '#/components/schemas/MessageSender'
+          description: 'On user entries another agent sent: the thread or subagent that sent it. Absent on messages a person, an integration, or an automation sent, and on the opening task a parent gives its subagent.'
+        clientKey:
+          type: string
+          minLength: 1
+          maxLength: 64
+        editOf:
+          type: string
+          allOf:
+          - minLength: 26
+          - maxLength: 26
+        model:
+          type: string
+        callId:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: object
+            properties:
+              file:
+                type: object
+                properties:
+                  fileId:
+                    type: string
+                  name:
+                    type: string
+                  mediaType:
+                    type: string
+                  sizeBytes:
+                    anyOf:
+                    - type: number
+                    - type: string
+                      enum:
+                      - Infinity
+                      - -Infinity
+                      - NaN
+                  preview:
+                    type: boolean
+                  previewBytes:
+                    anyOf:
+                    - type: number
+                    - type: string
+                      enum:
+                      - Infinity
+                      - -Infinity
+                      - NaN
+                  width:
+                    anyOf:
+                    - type: number
+                    - type: string
+                      enum:
+                      - Infinity
+                      - -Infinity
+                      - NaN
+                  height:
+                    anyOf:
+                    - type: number
+                    - type: string
+                      enum:
+                      - Infinity
+                      - -Infinity
+                      - NaN
+                  pageCount:
+                    type: integer
+                    minimum: 1
+                  sourcePath:
+                    type: string
+                  contentSha:
+                    type: string
+                required:
+                - fileId
+                - name
+                - mediaType
+                - sizeBytes
+                additionalProperties: false
+              title:
+                type: string
+            required:
+            - file
+            additionalProperties: false
+        createdAt:
+          type: string
+      required:
+      - id
+      - source
+      - text
+      - createdAt
+      additionalProperties: false
+    MessageSender:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The sending thread's or subagent's id, the same id the threads and subagents endpoints take.
+        relation:
+          type: string
+          enum:
+          - parent
+          - ancestor
+          - captain
+          - peer
+          description: 'The sender''s relation to this thread: `parent` or `ancestor` owns this subagent, `captain` is the Captain directing this thread, and `peer` is any other thread, including a crew thread messaging its Captain.'
+      required:
+      - id
+      - relation
+      additionalProperties: false
+    capy_ThreadNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/ThreadNotFound
+        threadId:
+          type: string
+      required:
+      - _tag
+      - threadId
+      additionalProperties: false
+    SubagentEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+        threadId:
+          type: string
+        parentId:
+          type: string
+        subagentPath:
+          type: string
+        taskPath:
+          type: string
+        projectId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - working
+          - waiting
+          - idle
+          - done
+          - failed
+        archived:
+          type: boolean
+        usage:
+          $ref: '#/components/schemas/UsageTotalsEncoded'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        lastActivityAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+      required:
+      - id
+      - threadId
+      - parentId
+      - subagentPath
+      - taskPath
+      - projectId
+      - title
+      - status
+      - archived
+      - usage
+      - createdAt
+      - updatedAt
+      - lastActivityAt
+      additionalProperties: false
+    MessagePageEncoded:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageEncoded'
+        cursor:
+          anyOf:
+          - type: string
+            allOf:
+            - minLength: 26
+            - maxLength: 26
+          - type: 'null'
+      required:
+      - items
+      - cursor
+      additionalProperties: false
+    capy_RateLimitedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/RateLimited
+        retryAfterSeconds:
+          type: integer
+      required:
+      - _tag
+      - retryAfterSeconds
+      additionalProperties: false
+    capy_SubagentNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/SubagentNotFound
+        subagentId:
+          type: string
+      required:
+      - _tag
+      - subagentId
+      additionalProperties: false
+    capy_UnauthorizedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Unauthorized
+      required:
+      - _tag
+      additionalProperties: false
+    UsageTotalsEncoded:
+      type: object
+      properties:
+        llmCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        imageCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        vmCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        totalCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+      required:
+      - llmCredits
+      - imageCredits
+      - vmCredits
+      - totalCredits
+      additionalProperties: false
+    capy_ForbiddenEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Forbidden
+      required:
+      - _tag
+      additionalProperties: false
+    SubagentPageEncoded:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubagentEncoded'
+        cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+      required:
+      - items
+      - cursor
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Capy API key
+      description: An API key created in Capy under Settings → API.

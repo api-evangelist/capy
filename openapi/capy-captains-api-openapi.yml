@@ -1,0 +1,869 @@
+openapi: 3.2.0
+info:
+  title: Capy Captains API
+  version: 1.0.0
+  description: Programmatic access to Capy's agent platform.
+servers:
+- url: https://api.capy.ai
+security:
+- bearerAuth: []
+tags:
+- name: captains
+paths:
+  /api/v1/captains:
+    get:
+      tags:
+      - captains
+      operationId: captains.list
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: CaptainList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptainListEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List Captains
+    post:
+      tags:
+      - captains
+      operationId: captains.create
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Captain
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptainEncoded'
+        '400':
+          description: capy/InvalidRequest | ModelSelection.Rejected
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+                - $ref: '#/components/schemas/ModelSelection.RejectedEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '402':
+          description: capy/PaidFeatureUnavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_PaidFeatureUnavailableEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ProjectNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ProjectNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCaptainRequest'
+        required: true
+      summary: Create Captain
+  /api/v1/captains/{captainId}:
+    get:
+      tags:
+      - captains
+      operationId: captains.get
+      parameters:
+      - name: captainId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Captain
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptainEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Get Captain
+  /api/v1/captains/{captainId}/crew:
+    get:
+      tags:
+      - captains
+      operationId: captains.crew
+      parameters:
+      - name: captainId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: CrewList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrewListEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List Captain crew
+  /api/v1/captains/{captainId}/digest:
+    get:
+      tags:
+      - captains
+      operationId: captains.digest
+      parameters:
+      - name: captainId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: CaptainDigest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptainDigestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Get Captain digest
+components:
+  schemas:
+    ThreadCaptain:
+      type: object
+      properties:
+        jamId:
+          type: string
+        name:
+          type: string
+        avatar:
+          $ref: '#/components/schemas/CaptainAvatar'
+      required:
+      - jamId
+      - name
+      - avatar
+      additionalProperties: false
+    ModelSelection.RejectedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - ModelSelection.Rejected
+        message:
+          type: string
+        candidates:
+          type: array
+          items:
+            type: object
+            properties:
+              entryId:
+                type: string
+              name:
+                type: string
+              billingLabel:
+                type: string
+            required:
+            - entryId
+            - name
+            - billingLabel
+            additionalProperties: false
+        rejection:
+          type: string
+          enum:
+          - disconnected
+          - not_connected
+        modelId:
+          type: string
+        service:
+          type: string
+          enum:
+          - codex
+          - copilot
+          - supergrok
+          - claude
+        health:
+          type: object
+          properties:
+            state:
+              type: string
+              enum:
+              - connected
+              - not_connected
+              - signed_out
+              - disabled
+              - usage_exhausted
+            kind:
+              type: string
+              enum:
+              - subscription
+              - key
+            provider:
+              type: string
+            action:
+              type: string
+              enum:
+              - connect
+              - reconnect
+              - replace_key
+              - enable
+            resetsAt:
+              type: string
+          required:
+          - state
+          - kind
+          - provider
+          additionalProperties: false
+      required:
+      - _tag
+      - message
+      - candidates
+      additionalProperties: false
+    ModelSelection:
+      type: object
+      properties:
+        modelId:
+          type: string
+        reasoningMode:
+          type: string
+          enum:
+          - none
+          - instant
+          - minimal
+          - low
+          - medium
+          - high
+          - xhigh
+          - max
+        modes:
+          type: object
+          properties:
+            fast:
+              type: boolean
+            pro:
+              type: boolean
+            ultrafast:
+              type: boolean
+          additionalProperties: false
+      required:
+      - modelId
+      additionalProperties: false
+    UsageTotalsEncoded:
+      type: object
+      properties:
+        llmCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        imageCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        vmCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        totalCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+      required:
+      - llmCredits
+      - imageCredits
+      - vmCredits
+      - totalCredits
+      additionalProperties: false
+    CaptainListEncoded:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaptainEncoded'
+      required:
+      - items
+      additionalProperties: false
+    ThreadLinearIssue:
+      type: object
+      properties:
+        key:
+          type: string
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+      required:
+      - key
+      - url
+      additionalProperties: false
+    capy_ThreadNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/ThreadNotFound
+        threadId:
+          type: string
+      required:
+      - _tag
+      - threadId
+      additionalProperties: false
+    CaptainDigestEncoded:
+      type: object
+      properties:
+        path:
+          anyOf:
+          - type: string
+            enum:
+            - DIGEST.md
+            - ONGOING.md
+            - NOTES.md
+          - type: 'null'
+          description: 'The file the digest was read from: `DIGEST.md`, else `ONGOING.md`, else the Captain''s `NOTES.md`. Null before the Captain has written any of them.'
+        markdown:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The file's text. Null when there is no file, or when the file is binary or larger than 64 KiB.
+        updatedAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: When the Captain's drive last changed.
+      required:
+      - path
+      - markdown
+      - updatedAt
+      additionalProperties: false
+    ThreadEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        authorId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        previousAuthorId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        titleCustom:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - working
+          - waiting
+          - idle
+          - failed
+          - archived
+        archived:
+          type: boolean
+        lastModelId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        linearIssue:
+          anyOf:
+          - $ref: '#/components/schemas/ThreadLinearIssue'
+          - type: 'null'
+        pullRequestAuthor:
+          anyOf:
+          - type: string
+            enum:
+            - user
+            - capy
+          - type: 'null'
+          description: 'Who authors this thread''s pull requests on GitHub: `capy` for the Capy GitHub App, `user` for the thread''s acting human. Null means the acting human''s Git identity preference decides.'
+        usage:
+          $ref: '#/components/schemas/UsageTotalsEncoded'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        lastActivityAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+        hasUnreads:
+          type: boolean
+        mentionCount:
+          type: integer
+        owed:
+          type: boolean
+        needsYou:
+          type: boolean
+        crewNeedsYou:
+          type: integer
+        participated:
+          type: boolean
+        crewMentionCount:
+          type: integer
+        captain:
+          $ref: '#/components/schemas/ThreadCaptain'
+        crewCount:
+          type: integer
+        member:
+          type: boolean
+        subscribed:
+          type: boolean
+        personal:
+          type: boolean
+        visibility:
+          type: string
+          enum:
+          - org
+          - private
+      required:
+      - id
+      - projectId
+      - authorId
+      - previousAuthorId
+      - title
+      - titleCustom
+      - status
+      - archived
+      - lastModelId
+      - linearIssue
+      - pullRequestAuthor
+      - usage
+      - createdAt
+      - updatedAt
+      - lastActivityAt
+      - hasUnreads
+      - mentionCount
+      - owed
+      - member
+      additionalProperties: false
+    CreateCaptainRequest:
+      type: object
+      properties:
+        requestId:
+          type: string
+          allOf:
+          - minLength: 1
+          - maxLength: 191
+        projectId:
+          type: string
+        name:
+          type: string
+          allOf:
+          - minLength: 1
+          - maxLength: 100
+        brief:
+          type: string
+          description: 'The Captain''s first message from you: what it is for and what to start on. Absent, the Captain greets you and asks.'
+        model:
+          $ref: '#/components/schemas/ModelSelection'
+        avatar:
+          $ref: '#/components/schemas/CaptainAvatar'
+          description: Absent, the Captain takes the first preset face on a blue background.
+        authorId:
+          type: string
+          description: The active member of the key's organization who owns the Captain. A Captain needs a human owner, so a service key must name one; a personal key owns it itself when absent. A replayed `requestId` returns the existing Captain unchanged.
+      required:
+      - requestId
+      - projectId
+      - name
+      additionalProperties: false
+    capy_ProjectNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/ProjectNotFound
+        projectId:
+          type: string
+      required:
+      - _tag
+      - projectId
+      additionalProperties: false
+    CrewListEncoded:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThreadEncoded'
+      required:
+      - items
+      additionalProperties: false
+    CaptainAvatar:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - preset
+          - emoji
+        value:
+          type: string
+        background:
+          type: string
+        image:
+          type: string
+      required:
+      - kind
+      - value
+      - background
+      additionalProperties: false
+    capy_RateLimitedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/RateLimited
+        retryAfterSeconds:
+          type: integer
+      required:
+      - _tag
+      - retryAfterSeconds
+      additionalProperties: false
+    CaptainEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        authorId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        previousAuthorId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        titleCustom:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - working
+          - waiting
+          - idle
+          - failed
+          - archived
+        archived:
+          type: boolean
+        lastModelId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        linearIssue:
+          anyOf:
+          - $ref: '#/components/schemas/ThreadLinearIssue'
+          - type: 'null'
+        pullRequestAuthor:
+          anyOf:
+          - type: string
+            enum:
+            - user
+            - capy
+          - type: 'null'
+          description: 'Who authors this thread''s pull requests on GitHub: `capy` for the Capy GitHub App, `user` for the thread''s acting human. Null means the acting human''s Git identity preference decides.'
+        usage:
+          $ref: '#/components/schemas/UsageTotalsEncoded'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        lastActivityAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+        hasUnreads:
+          type: boolean
+        mentionCount:
+          type: integer
+        owed:
+          type: boolean
+        needsYou:
+          type: boolean
+        crewNeedsYou:
+          type: integer
+        participated:
+          type: boolean
+        crewMentionCount:
+          type: integer
+        captain:
+          $ref: '#/components/schemas/ThreadCaptain'
+        crewCount:
+          type: integer
+        member:
+          type: boolean
+        subscribed:
+          type: boolean
+        personal:
+          type: boolean
+        visibility:
+          type: string
+          enum:
+          - org
+          - private
+        name:
+          type: string
+        avatar:
+          $ref: '#/components/schemas/CaptainAvatar'
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A short public label saying whose Captain this is and what it covers, at most 140 characters of plain text, for attribution and discovery. Null when unset.
+      required:
+      - id
+      - projectId
+      - authorId
+      - previousAuthorId
+      - title
+      - titleCustom
+      - status
+      - archived
+      - lastModelId
+      - linearIssue
+      - pullRequestAuthor
+      - usage
+      - createdAt
+      - updatedAt
+      - lastActivityAt
+      - hasUnreads
+      - mentionCount
+      - owed
+      - member
+      - name
+      - avatar
+      - description
+      additionalProperties: false
+    capy_UnauthorizedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Unauthorized
+      required:
+      - _tag
+      additionalProperties: false
+    capy_ForbiddenEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Forbidden
+      required:
+      - _tag
+      additionalProperties: false
+    capy_PaidFeatureUnavailableEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/PaidFeatureUnavailable
+        feature:
+          type: string
+          enum:
+          - small
+          - medium
+          - large
+          - ultra
+          - hyper
+          - bigguy
+          - byok
+          - captain_image
+      required:
+      - _tag
+      - feature
+      additionalProperties: false
+    capy_InvalidRequestEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/InvalidRequest
+        message:
+          type: string
+      required:
+      - _tag
+      - message
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Capy API key
+      description: An API key created in Capy under Settings → API.

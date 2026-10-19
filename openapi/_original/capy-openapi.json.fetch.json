@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.capy.ai/openapi.json",
+ "final": "https://docs.capy.ai/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 192282,
+ "sha256": "eb29d959f18783345bf7c48dfed7f5d1dfe48a39fb8acbf54e699f7a0a4c69e1",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

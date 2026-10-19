@@ -1,0 +1,1062 @@
+openapi: 3.2.0
+info:
+  title: Capy Reviews API
+  version: 1.0.0
+  description: Programmatic access to Capy's agent platform.
+servers:
+- url: https://api.capy.ai
+security:
+- bearerAuth: []
+tags:
+- name: Reviews
+paths:
+  /api/v1/review-settings:
+    get:
+      tags:
+      - Reviews
+      operationId: reviews.settings
+      parameters:
+      - name: repo
+        in: query
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewSettings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewSettingsEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '422':
+          description: capy/ReviewRefused
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ReviewRefusedEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Get review settings
+    put:
+      tags:
+      - Reviews
+      operationId: reviews.configure
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewSettings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewSettingsEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '422':
+          description: capy/ReviewRefused
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ReviewRefusedEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigureReviewRequest'
+        required: true
+      summary: Configure review settings
+  /api/v1/review-billing-transfer:
+    get:
+      tags:
+      - Reviews
+      operationId: reviews.billingTransfer
+      parameters:
+      - name: repo
+        in: query
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewBillingTransferState
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewBillingTransferStateEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '422':
+          description: capy/ReviewRefused
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ReviewRefusedEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Get review billing transfer
+  /api/v1/review-billing-transfer/offer:
+    post:
+      tags:
+      - Reviews
+      operationId: reviews.offerBillingTransfer
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewBillingTransferState
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewBillingTransferStateEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '422':
+          description: capy/ReviewRefused
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ReviewRefusedEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferReviewBillingTransferRequest'
+        required: true
+      summary: Offer review billing transfer
+  /api/v1/review-billing-transfer/accept:
+    post:
+      tags:
+      - Reviews
+      operationId: reviews.acceptBillingTransfer
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewBillingTransferState
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewBillingTransferStateEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '422':
+          description: capy/ReviewRefused
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ReviewRefusedEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewBillingTransferRequest'
+        required: true
+      summary: Accept review billing transfer
+  /api/v1/review-billing-transfer/cancel:
+    post:
+      tags:
+      - Reviews
+      operationId: reviews.cancelBillingTransfer
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewBillingTransferState
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewBillingTransferStateEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '422':
+          description: capy/ReviewRefused
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ReviewRefusedEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewBillingTransferRequest'
+        required: true
+      summary: Cancel review billing transfer
+  /api/v1/review-billing-transfer/decline:
+    post:
+      tags:
+      - Reviews
+      operationId: reviews.declineBillingTransfer
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewBillingTransferState
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewBillingTransferStateEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '422':
+          description: capy/ReviewRefused
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ReviewRefusedEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewBillingTransferRequest'
+        required: true
+      summary: Decline review billing transfer
+  /api/v1/reviews:
+    post:
+      tags:
+      - Reviews
+      operationId: reviews.start
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewStarted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewStartedEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '402':
+          description: capy/PaidFeatureUnavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_PaidFeatureUnavailableEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '422':
+          description: capy/ReviewRefused
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ReviewRefusedEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartReviewRequest'
+        required: true
+      summary: Start review
+  /api/v1/reviews/rounds/{requestId}:
+    get:
+      tags:
+      - Reviews
+      operationId: reviews.round
+      parameters:
+      - name: requestId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewRound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewRoundEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ReviewRoundNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ReviewRoundNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Round
+components:
+  schemas:
+    ConfigureReviewRequest:
+      type: object
+      properties:
+        repo:
+          type: string
+        autoReview:
+          type: string
+          enum:
+          - 'off'
+          - once
+          - always
+        postingThreshold:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+        postInvestigate:
+          type: boolean
+        postNotes:
+          type: boolean
+        postStatusCheck:
+          type: boolean
+        projectId:
+          type: string
+        memorySelection:
+          type: string
+          enum:
+          - index
+          - paths
+          - select
+      required:
+      - repo
+      additionalProperties: false
+    ReviewBillingTransferOfferEncoded:
+      type: object
+      properties:
+        fromOrgId:
+          type: string
+        toOrgId:
+          type: string
+        createdAt:
+          type: string
+      required:
+      - fromOrgId
+      - toOrgId
+      - createdAt
+      additionalProperties: false
+    ReviewRoundEncoded:
+      type: object
+      properties:
+        requestId:
+          type: string
+        reviewId:
+          type: string
+        threadId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        repo:
+          type: string
+        prNumber:
+          type: integer
+        headSha:
+          type: string
+        baseSha:
+          type: string
+        status:
+          type: string
+          enum:
+          - pending
+          - running
+          - completed
+          - failed
+          - stale
+        shadow:
+          type: boolean
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+        effort:
+          anyOf:
+          - type: string
+            enum:
+            - none
+            - instant
+            - minimal
+            - low
+            - medium
+            - high
+            - xhigh
+            - max
+          - type: 'null'
+        tier:
+          anyOf:
+          - type: string
+            enum:
+            - low
+            - medium
+            - high
+          - type: 'null'
+        baselineSha:
+          anyOf:
+          - type: string
+          - type: 'null'
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        failureReason:
+          anyOf:
+          - type: string
+          - type: 'null'
+        failureMessage:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdAt:
+          type: string
+        settledAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+        memory:
+          anyOf:
+          - $ref: '#/components/schemas/ReviewRoundMemoryEncoded'
+          - type: 'null'
+        memoryReason:
+          anyOf:
+          - type: string
+            enum:
+            - no_project
+            - several_projects
+            - memory_off
+            - empty
+          - type: 'null'
+        memorySelection:
+          type: string
+          enum:
+          - index
+          - paths
+          - select
+        memoryTopics:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              title:
+                type: string
+            required:
+            - path
+            - title
+            additionalProperties: false
+        findings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewRoundFindingEncoded'
+      required:
+      - requestId
+      - reviewId
+      - threadId
+      - repo
+      - prNumber
+      - headSha
+      - baseSha
+      - status
+      - shadow
+      - model
+      - effort
+      - tier
+      - baselineSha
+      - title
+      - failureReason
+      - failureMessage
+      - createdAt
+      - settledAt
+      - memory
+      - memoryReason
+      - memorySelection
+      - memoryTopics
+      - findings
+      additionalProperties: false
+    StartReviewRequest:
+      type: object
+      properties:
+        repo:
+          type: string
+        prNumber:
+          type: integer
+        idempotencyKey:
+          type: string
+          allOf:
+          - minLength: 1
+          - maxLength: 191
+        forceRefresh:
+          type: boolean
+        sourceThreadId:
+          type: string
+        model:
+          type: string
+        effort:
+          type: string
+          enum:
+          - none
+          - instant
+          - minimal
+          - low
+          - medium
+          - high
+          - xhigh
+          - max
+        tier:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          description: Review tier for this round, including its model, effort, and charge multiplier. Outranks the explicit model and both stored first-review and follow-up defaults. Omitted uses the default for the round's scope.
+        shadow:
+          type: boolean
+        headSha:
+          type: string
+          allOf:
+          - minLength: 40
+          - maxLength: 40
+        projectId:
+          type: string
+        memorySelection:
+          type: string
+          enum:
+          - index
+          - paths
+          - select
+      required:
+      - repo
+      - prNumber
+      additionalProperties: false
+    ReviewFindingMemoryEncoded:
+      type: object
+      properties:
+        volumeId:
+          type: string
+        versionId:
+          type: string
+        path:
+          type: string
+        title:
+          type: string
+      required:
+      - volumeId
+      - versionId
+      - path
+      - title
+      additionalProperties: false
+    ReviewBillingTransferRequest:
+      type: object
+      properties:
+        repo:
+          type: string
+      required:
+      - repo
+      additionalProperties: false
+    OfferReviewBillingTransferRequest:
+      type: object
+      properties:
+        repo:
+          type: string
+        targetOrgId:
+          type: string
+      required:
+      - repo
+      - targetOrgId
+      additionalProperties: false
+    ReviewStartedEncoded:
+      type: object
+      properties:
+        reviewId:
+          type: string
+        requestId:
+          type: string
+        threadId:
+          type: string
+        headSha:
+          type: string
+        adopted:
+          type: boolean
+        sourceRecorded:
+          type: boolean
+      required:
+      - reviewId
+      - requestId
+      - threadId
+      - headSha
+      - adopted
+      additionalProperties: false
+    capy_ReviewRoundNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/ReviewRoundNotFound
+        requestId:
+          type: string
+      required:
+      - _tag
+      - requestId
+      additionalProperties: false
+    capy_RateLimitedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/RateLimited
+        retryAfterSeconds:
+          type: integer
+      required:
+      - _tag
+      - retryAfterSeconds
+      additionalProperties: false
+    capy_PaidFeatureUnavailableEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/PaidFeatureUnavailable
+        feature:
+          type: string
+          enum:
+          - small
+          - medium
+          - large
+          - ultra
+          - hyper
+          - bigguy
+          - byok
+          - captain_image
+      required:
+      - _tag
+      - feature
+      additionalProperties: false
+    ReviewRoundMemoryEncoded:
+      type: object
+      properties:
+        projectId:
+          type: string
+        volumeId:
+          type: string
+        versionId:
+          type: string
+      required:
+      - projectId
+      - volumeId
+      - versionId
+      additionalProperties: false
+    ReviewBillingTransferStateEncoded:
+      type: object
+      properties:
+        repo:
+          type: string
+        billingOrgId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        offer:
+          anyOf:
+          - $ref: '#/components/schemas/ReviewBillingTransferOfferEncoded'
+          - type: 'null'
+      required:
+      - repo
+      - billingOrgId
+      - offer
+      additionalProperties: false
+    capy_UnauthorizedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Unauthorized
+      required:
+      - _tag
+      additionalProperties: false
+    ReviewSettingsEncoded:
+      type: object
+      properties:
+        repo:
+          type: string
+        billingOrgId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        heldByCaller:
+          type: boolean
+        autoReview:
+          type: string
+          enum:
+          - 'off'
+          - once
+          - always
+        postingThreshold:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+        postInvestigate:
+          type: boolean
+        postNotes:
+          type: boolean
+        postStatusCheck:
+          type: boolean
+        projectId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        memorySelection:
+          type: string
+          enum:
+          - index
+          - paths
+          - select
+      required:
+      - repo
+      - billingOrgId
+      - heldByCaller
+      - autoReview
+      - postingThreshold
+      - postInvestigate
+      - postNotes
+      - postStatusCheck
+      - projectId
+      - memorySelection
+      additionalProperties: false
+    ReviewRoundFindingEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+        ruleId:
+          anyOf:
+          - type: string
+            allOf:
+            - minLength: 32
+            - maxLength: 32
+            pattern: ^rrule_
+          - type: 'null'
+        memory:
+          anyOf:
+          - $ref: '#/components/schemas/ReviewFindingMemoryEncoded'
+          - type: 'null'
+        telemetry:
+          anyOf:
+          - type: object
+            properties:
+              window:
+                anyOf:
+                - type: string
+                - type: 'null'
+              note:
+                type: string
+            required:
+            - window
+            additionalProperties: false
+          - type: 'null'
+        kind:
+          type: string
+          enum:
+          - issue
+          - note
+        severity:
+          anyOf:
+          - type: string
+            enum:
+            - low
+            - medium
+            - high
+          - type: 'null'
+        confidence:
+          anyOf:
+          - type: string
+            enum:
+            - confirmed
+            - investigate
+          - type: 'null'
+        category:
+          anyOf:
+          - type: string
+            enum:
+            - bug
+            - risk
+            - maintainability
+            - refactor
+          - type: 'null'
+        summary:
+          type: string
+        detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+        suggestion:
+          anyOf:
+          - type: string
+          - type: 'null'
+        file:
+          anyOf:
+          - type: string
+          - type: 'null'
+        line:
+          anyOf:
+          - type: integer
+          - type: 'null'
+        startLine:
+          anyOf:
+          - type: integer
+          - type: 'null'
+        files:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+      required:
+      - id
+      - ruleId
+      - memory
+      - telemetry
+      - kind
+      - severity
+      - confidence
+      - category
+      - summary
+      - detail
+      - suggestion
+      - file
+      - line
+      - startLine
+      - files
+      additionalProperties: false
+    capy_ReviewRefusedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/ReviewRefused
+        reason:
+          type: string
+      required:
+      - _tag
+      - reason
+      additionalProperties: false
+    capy_ForbiddenEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Forbidden
+      required:
+      - _tag
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Capy API key
+      description: An API key created in Capy under Settings → API.

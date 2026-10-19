@@ -1,0 +1,627 @@
+openapi: 3.2.0
+info:
+  title: Capy Review Rules API
+  version: 1.0.0
+  description: Programmatic access to Capy's agent platform.
+servers:
+- url: https://api.capy.ai
+security:
+- bearerAuth: []
+tags:
+- name: reviewRules
+paths:
+  /api/v1/review-rules/{id}:
+    get:
+      tags:
+      - reviewRules
+      operationId: reviewRules.get
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rrule_
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewRuleRead
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewRuleReadEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Get review rule
+    delete:
+      tags:
+      - reviewRules
+      operationId: reviewRules.remove
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rrule_
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewRuleUpdated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewRuleUpdatedEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Delete review rule
+    patch:
+      tags:
+      - reviewRules
+      operationId: reviewRules.update
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rrule_
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewRuleUpdated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewRuleUpdatedEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewRuleRequest'
+        required: true
+      summary: Update review rule
+  /api/v1/review-rules:
+    get:
+      tags:
+      - reviewRules
+      operationId: reviewRules.list
+      parameters:
+      - name: repo
+        in: query
+        schema:
+          type: string
+        required: false
+      - name: cursor
+        in: query
+        schema:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rrule_
+        required: false
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+        required: false
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewRuleList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewRuleListEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List review rules
+    post:
+      tags:
+      - reviewRules
+      operationId: reviewRules.create
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewRuleCreated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewRuleCreatedEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRuleRequest'
+        required: true
+      summary: Create review rule
+components:
+  schemas:
+    ReviewRuleListEncoded:
+      type: object
+      properties:
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewRuleEncoded'
+        nextCursor:
+          anyOf:
+          - type: string
+            allOf:
+            - minLength: 32
+            - maxLength: 32
+            pattern: ^rrule_
+          - type: 'null'
+      required:
+      - rules
+      - nextCursor
+      additionalProperties: false
+    ReviewRuleUpdatedEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rrule_
+        rule:
+          anyOf:
+          - $ref: '#/components/schemas/ReviewRuleEncoded'
+          - type: 'null'
+        deleted:
+          type: boolean
+      required:
+      - id
+      - rule
+      - deleted
+      additionalProperties: false
+    ReviewRuleFileSelection:
+      anyOf:
+      - type: object
+        properties:
+          repo:
+            type: string
+          path:
+            type: string
+        required:
+        - repo
+        - path
+        additionalProperties: false
+      - type: 'null'
+    ReviewRuleCreatedEncoded:
+      type: object
+      properties:
+        rule:
+          $ref: '#/components/schemas/ReviewRuleEncoded'
+      required:
+      - rule
+      additionalProperties: false
+    capy_RateLimitedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/RateLimited
+        retryAfterSeconds:
+          type: integer
+      required:
+      - _tag
+      - retryAfterSeconds
+      additionalProperties: false
+    UpdateReviewRuleRequest:
+      type: object
+      properties:
+        body:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: object
+            properties:
+              repo:
+                anyOf:
+                - type: string
+                - type: 'null'
+              paths:
+                type: array
+                items:
+                  type: string
+            required:
+            - repo
+            - paths
+            additionalProperties: false
+        file:
+          $ref: '#/components/schemas/ReviewRuleFileSelection'
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+      additionalProperties: false
+    capy_UnauthorizedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Unauthorized
+      required:
+      - _tag
+      additionalProperties: false
+    CreateReviewRuleRequest:
+      type: object
+      properties:
+        body:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: object
+            properties:
+              repo:
+                anyOf:
+                - type: string
+                - type: 'null'
+              paths:
+                type: array
+                items:
+                  type: string
+            required:
+            - repo
+            - paths
+            additionalProperties: false
+        file:
+          $ref: '#/components/schemas/ReviewRuleFileSelection'
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+      required:
+      - body
+      additionalProperties: false
+    capy_InvalidRequestEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/InvalidRequest
+        message:
+          type: string
+      required:
+      - _tag
+      - message
+      additionalProperties: false
+    ReviewRuleReadEncoded:
+      type: object
+      properties:
+        rule:
+          anyOf:
+          - $ref: '#/components/schemas/ReviewRuleEncoded'
+          - type: 'null'
+      required:
+      - rule
+      additionalProperties: false
+    capy_ForbiddenEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Forbidden
+      required:
+      - _tag
+      additionalProperties: false
+    ReviewRuleEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rrule_
+        body:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: object
+            properties:
+              repo:
+                anyOf:
+                - type: string
+                - type: 'null'
+              paths:
+                type: array
+                items:
+                  type: string
+              githubRepoId:
+                anyOf:
+                - anyOf:
+                  - type: number
+                  - type: string
+                    enum:
+                    - Infinity
+                    - -Infinity
+                    - NaN
+                - type: 'null'
+              covered:
+                type: boolean
+              heldByCaller:
+                type: boolean
+            required:
+            - repo
+            - paths
+            - githubRepoId
+            - covered
+            - heldByCaller
+            additionalProperties: false
+        file:
+          anyOf:
+          - type: object
+            properties:
+              repo:
+                type: string
+              path:
+                type: string
+              githubRepoId:
+                anyOf:
+                - type: number
+                - type: string
+                  enum:
+                  - Infinity
+                  - -Infinity
+                  - NaN
+              covered:
+                type: boolean
+            required:
+            - repo
+            - path
+            - githubRepoId
+            - covered
+            additionalProperties: false
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+        source:
+          type: string
+          enum:
+          - app
+          - api
+          - tool
+          - comment
+        sourceRef:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdByUserId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdByName:
+          anyOf:
+          - type: string
+          - type: 'null'
+        firedCount:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        lastFired:
+          anyOf:
+          - type: object
+            properties:
+              repo:
+                type: string
+              prNumber:
+                type: integer
+              at:
+                type: string
+            required:
+            - repo
+            - prNumber
+            - at
+            additionalProperties: false
+          - type: 'null'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+      - id
+      - body
+      - scopes
+      - file
+      - status
+      - source
+      - sourceRef
+      - createdByUserId
+      - createdByName
+      - firedCount
+      - lastFired
+      - createdAt
+      - updatedAt
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Capy API key
+      description: An API key created in Capy under Settings → API.

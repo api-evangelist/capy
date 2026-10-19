@@ -1,0 +1,665 @@
+openapi: 3.2.0
+info:
+  title: Capy Streams API
+  version: 1.0.0
+  description: Programmatic access to Capy's agent platform.
+servers:
+- url: https://api.capy.ai
+security:
+- bearerAuth: []
+tags:
+- name: Streams
+paths:
+  /api/v1/threads/{threadId}/stream:
+    get:
+      tags:
+      - Streams
+      operationId: streams.thread
+      parameters:
+      - name: threadId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: last-event-id
+        in: header
+        schema:
+          type: string
+          description: The last `id:` a client read; the committed lane resumes after it.
+        required: false
+      - name: after
+        in: query
+        schema:
+          type: string
+          description: Exclusive event-ID cursor to start the committed lane after; the Last-Event-ID header wins when both are present.
+        required: false
+      - name: until
+        in: query
+        schema:
+          type: string
+          description: '`run`: close the stream with `done` after the run in progress ends, or at once when the thread is not working.'
+        required: false
+      - name: frames
+        in: query
+        schema:
+          type: string
+          description: '`subagent`: send each subagent''s lifecycle as a `subagent` frame. Defaults to `task`, the original `task` frame.'
+        required: false
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/StreamEvent'
+              x-effect-stream:
+                encoding: sse
+                causeSchema:
+                  type: array
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        _tag:
+                          type: string
+                          enum:
+                          - Fail
+                        error:
+                          not: {}
+                      required:
+                      - _tag
+                      - error
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        _tag:
+                          type: string
+                          enum:
+                          - Die
+                        defect: {}
+                      required:
+                      - _tag
+                      - defect
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        _tag:
+                          type: string
+                          enum:
+                          - Interrupt
+                        fiberId:
+                          anyOf:
+                          - type: number
+                          - type: 'null'
+                      required:
+                      - _tag
+                      - fiberId
+                      additionalProperties: false
+                errorSchema:
+                  not: {}
+                failureEvent: effect/httpapi/stream/failure
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+        '503':
+          description: capy/StreamUnavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_StreamUnavailableEncoded'
+      summary: Stream thread
+  /api/v1/subagents/{subagentId}/stream:
+    get:
+      tags:
+      - Streams
+      operationId: streams.subagent
+      parameters:
+      - name: subagentId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: last-event-id
+        in: header
+        schema:
+          type: string
+          description: The last `id:` a client read; the committed lane resumes after it.
+        required: false
+      - name: after
+        in: query
+        schema:
+          type: string
+          description: Exclusive event-ID cursor to start the committed lane after; the Last-Event-ID header wins when both are present.
+        required: false
+      - name: until
+        in: query
+        schema:
+          type: string
+          description: '`run`: close the stream with `done` after the run in progress ends, or at once when the thread is not working.'
+        required: false
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/StreamEvent'
+              x-effect-stream:
+                encoding: sse
+                causeSchema:
+                  type: array
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        _tag:
+                          type: string
+                          enum:
+                          - Fail
+                        error:
+                          not: {}
+                      required:
+                      - _tag
+                      - error
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        _tag:
+                          type: string
+                          enum:
+                          - Die
+                        defect: {}
+                      required:
+                      - _tag
+                      - defect
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        _tag:
+                          type: string
+                          enum:
+                          - Interrupt
+                        fiberId:
+                          anyOf:
+                          - type: number
+                          - type: 'null'
+                      required:
+                      - _tag
+                      - fiberId
+                      additionalProperties: false
+                errorSchema:
+                  not: {}
+                failureEvent: effect/httpapi/stream/failure
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/SubagentNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_SubagentNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+        '503':
+          description: capy/StreamUnavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_StreamUnavailableEncoded'
+      summary: Stream subagent
+  /api/v1/tasks/{taskId}/stream:
+    get:
+      tags:
+      - Streams
+      operationId: streams.task
+      parameters:
+      - name: taskId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: last-event-id
+        in: header
+        schema:
+          type: string
+          description: The last `id:` a client read; the committed lane resumes after it.
+        required: false
+      - name: after
+        in: query
+        schema:
+          type: string
+          description: Exclusive event-ID cursor to start the committed lane after; the Last-Event-ID header wins when both are present.
+        required: false
+      - name: until
+        in: query
+        schema:
+          type: string
+          description: '`run`: close the stream with `done` after the run in progress ends, or at once when the thread is not working.'
+        required: false
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/StreamEvent'
+              x-effect-stream:
+                encoding: sse
+                causeSchema:
+                  type: array
+                  items:
+                    anyOf:
+                    - type: object
+                      properties:
+                        _tag:
+                          type: string
+                          enum:
+                          - Fail
+                        error:
+                          not: {}
+                      required:
+                      - _tag
+                      - error
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        _tag:
+                          type: string
+                          enum:
+                          - Die
+                        defect: {}
+                      required:
+                      - _tag
+                      - defect
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        _tag:
+                          type: string
+                          enum:
+                          - Interrupt
+                        fiberId:
+                          anyOf:
+                          - type: number
+                          - type: 'null'
+                      required:
+                      - _tag
+                      - fiberId
+                      additionalProperties: false
+                errorSchema:
+                  not: {}
+                failureEvent: effect/httpapi/stream/failure
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/TaskNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_TaskNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+        '503':
+          description: capy/StreamUnavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_StreamUnavailableEncoded'
+      summary: Stream task
+components:
+  schemas:
+    StreamErrorFrameEncoded:
+      type: string
+      contentMediaType: application/json
+    RunFrameEncoded:
+      type: string
+      contentMediaType: application/json
+    StreamEvent:
+      anyOf:
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - status
+          data:
+            type: string
+            contentMediaType: application/json
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - transcript
+          id:
+            type: string
+            allOf:
+            - minLength: 26
+            - maxLength: 26
+          data:
+            $ref: '#/components/schemas/MessageEncoded_1'
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - run
+          data:
+            $ref: '#/components/schemas/RunFrameEncoded'
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - turn
+          data:
+            $ref: '#/components/schemas/TurnFrameEncoded'
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - assistant
+          data:
+            $ref: '#/components/schemas/AssistantFrameEncoded'
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - tool_call
+          data:
+            $ref: '#/components/schemas/ToolCallFrameEncoded'
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - subagent
+          data:
+            $ref: '#/components/schemas/SubagentStatusFrameEncoded'
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - task
+          data:
+            $ref: '#/components/schemas/TaskStatusFrameEncoded'
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - heartbeat
+          data:
+            type: string
+            contentMediaType: application/json
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - error
+          data:
+            $ref: '#/components/schemas/StreamErrorFrameEncoded'
+        required:
+        - event
+        - data
+        additionalProperties: false
+      - type: object
+        properties:
+          event:
+            type: string
+            enum:
+            - done
+          data:
+            type: string
+            contentMediaType: application/json
+        required:
+        - event
+        - data
+        additionalProperties: false
+    capy_ThreadNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/ThreadNotFound
+        threadId:
+          type: string
+      required:
+      - _tag
+      - threadId
+      additionalProperties: false
+    AssistantFrameEncoded:
+      type: string
+      contentMediaType: application/json
+    capy_TaskNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/TaskNotFound
+        taskId:
+          type: string
+      required:
+      - _tag
+      - taskId
+      additionalProperties: false
+    TurnFrameEncoded:
+      type: string
+      contentMediaType: application/json
+    capy_RateLimitedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/RateLimited
+        retryAfterSeconds:
+          type: integer
+      required:
+      - _tag
+      - retryAfterSeconds
+      additionalProperties: false
+    MessageEncoded_1:
+      type: string
+      contentMediaType: application/json
+    capy_SubagentNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/SubagentNotFound
+        subagentId:
+          type: string
+      required:
+      - _tag
+      - subagentId
+      additionalProperties: false
+    capy_UnauthorizedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Unauthorized
+      required:
+      - _tag
+      additionalProperties: false
+    SubagentStatusFrameEncoded:
+      type: string
+      contentMediaType: application/json
+    capy_InvalidRequestEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/InvalidRequest
+        message:
+          type: string
+      required:
+      - _tag
+      - message
+      additionalProperties: false
+    capy_ForbiddenEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Forbidden
+      required:
+      - _tag
+      additionalProperties: false
+    ToolCallFrameEncoded:
+      type: string
+      contentMediaType: application/json
+    capy_StreamUnavailableEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/StreamUnavailable
+      required:
+      - _tag
+      additionalProperties: false
+    TaskStatusFrameEncoded:
+      type: string
+      contentMediaType: application/json
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Capy API key
+      description: An API key created in Capy under Settings → API.

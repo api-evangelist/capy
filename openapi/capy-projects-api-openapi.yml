@@ -2,147 +2,391 @@ openapi: 3.2.0
 info:
   title: Capy Projects API
   version: 1.0.0
+  description: Programmatic access to Capy's agent platform.
 servers:
-- url: https://capy.ai/api
+- url: https://api.capy.ai
 security:
 - bearerAuth: []
 tags:
 - name: Projects
 paths:
-  /v1/projects:
+  /api/v1/projects:
     get:
-      operationId: listProjects
-      summary: List projects
-      description: List projects available to the API token.
       tags:
       - Projects
+      operationId: projects.list
+      parameters: []
       security:
       - bearerAuth: []
-      parameters:
-      - name: limit
-        in: query
-        required: false
-        schema:
-          default: 20
-          type: integer
-          minimum: 1
-          maximum: 100
-      - name: cursor
-        in: query
-        required: false
-        schema:
-          type: string
       responses:
         '200':
-          description: Success
+          description: ProjectList
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListProjectsResponse'
+                $ref: '#/components/schemas/ProjectListEncoded'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
         '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /v1/projects/{projectId}:
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List projects
+  /api/v1/projects/{projectId}:
     get:
-      operationId: getProject
-      summary: Get project
-      description: Get a single project.
       tags:
       - Projects
-      security:
-      - bearerAuth: []
+      operationId: projects.get
       parameters:
       - name: projectId
         in: path
-        required: true
-        description: Project ID.
         schema:
           type: string
-        example: proj_123
+        required: true
+      security:
+      - bearerAuth: []
       responses:
         '200':
-          description: Success
+          description: Project
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
+                $ref: '#/components/schemas/ProjectEncoded'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
         '404':
-          $ref: '#/components/responses/NotFound'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-        '500':
-          $ref: '#/components/responses/InternalError'
+          description: capy/ProjectNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ProjectNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Get project
+  /api/v1/projects/{projectId}/environment-variables:
+    get:
+      tags:
+      - Projects
+      operationId: projects.listEnvironmentVariables
+      parameters:
+      - name: projectId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: EnvironmentVariableList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentVariableListEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ProjectNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ProjectNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List environment variables
+    put:
+      tags:
+      - Projects
+      operationId: projects.setEnvironmentVariables
+      parameters:
+      - name: projectId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: EnvironmentVariableList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentVariableListEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ProjectNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ProjectNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetEnvironmentVariablesRequest'
+        required: true
+      summary: Set environment variables
+    delete:
+      tags:
+      - Projects
+      operationId: projects.deleteEnvironmentVariables
+      parameters:
+      - name: projectId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: EnvironmentVariableList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentVariableListEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ProjectNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ProjectNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteEnvironmentVariablesRequest'
+        required: true
+      summary: Delete environment variables
 components:
   schemas:
-    ListProjectsResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
+    capy_ProjectNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/ProjectNotFound
+        projectId:
+          type: string
+      required:
+      - _tag
+      - projectId
+      additionalProperties: false
+    ProjectListEncoded:
       type: object
       properties:
         items:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: string
-              name:
-                type: string
-              description:
-                anyOf:
-                - type: string
-                - type: 'null'
-              taskCode:
-                type: string
-              repos:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    repoFullName:
-                      type: string
-                    branch:
-                      type: string
-                  required:
-                  - repoFullName
-                  - branch
-                  additionalProperties: false
-              createdAt:
-                type: string
-              updatedAt:
-                type: string
-            required:
-            - id
-            - name
-            - description
-            - taskCode
-            - repos
-            - createdAt
-            - updatedAt
-            additionalProperties: false
-        nextCursor:
+            $ref: '#/components/schemas/ProjectEncoded'
+      required:
+      - items
+      additionalProperties: false
+    EnvironmentVariableEncoded:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
           anyOf:
           - type: string
           - type: 'null'
-        hasMore:
-          type: boolean
+        updatedAt:
+          type: string
+      required:
+      - name
+      - description
+      - updatedAt
+      additionalProperties: false
+    capy_RateLimitedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/RateLimited
+        retryAfterSeconds:
+          type: integer
+      required:
+      - _tag
+      - retryAfterSeconds
+      additionalProperties: false
+    EnvironmentVariableListEncoded:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentVariableEncoded'
       required:
       - items
-      - nextCursor
-      - hasMore
       additionalProperties: false
-    Project:
-      $schema: https://json-schema.org/draft/2020-12/schema
+    ProjectRepoEncoded:
+      type: object
+      properties:
+        repoFullName:
+          type: string
+        baseBranch:
+          type: string
+        mode:
+          type: string
+          enum:
+          - primary
+          - lazy
+      required:
+      - repoFullName
+      - baseBranch
+      - mode
+      additionalProperties: false
+    DeleteEnvironmentVariablesRequest:
+      type: object
+      properties:
+        names:
+          type: array
+          items:
+            type: string
+            pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+          minItems: 1
+          maxItems: 500
+      required:
+      - names
+      additionalProperties: false
+    capy_UnauthorizedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Unauthorized
+      required:
+      - _tag
+      additionalProperties: false
+    capy_InvalidRequestEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/InvalidRequest
+        message:
+          type: string
+      required:
+      - _tag
+      - message
+      additionalProperties: false
+    ProjectEncoded:
       type: object
       properties:
         id:
@@ -153,21 +397,20 @@ components:
           anyOf:
           - type: string
           - type: 'null'
-        taskCode:
+        code:
           type: string
+          allOf:
+          - minLength: 1
+          - maxLength: 255
+        visibility:
+          type: string
+          enum:
+          - org
+          - private
         repos:
           type: array
           items:
-            type: object
-            properties:
-              repoFullName:
-                type: string
-              branch:
-                type: string
-            required:
-            - repoFullName
-            - branch
-            additionalProperties: false
+            $ref: '#/components/schemas/ProjectRepoEncoded'
         createdAt:
           type: string
         updatedAt:
@@ -176,63 +419,49 @@ components:
       - id
       - name
       - description
-      - taskCode
+      - code
+      - visibility
       - repos
       - createdAt
       - updatedAt
       additionalProperties: false
-    ErrorResponse:
-      $schema: https://json-schema.org/draft/2020-12/schema
+    capy_ForbiddenEncoded:
       type: object
       properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-            message:
-              type: string
-            details: {}
-          required:
-          - code
-          - message
-          additionalProperties: false
+        _tag:
+          type: string
+          enum:
+          - capy/Forbidden
       required:
-      - error
+      - _tag
       additionalProperties: false
-  responses:
-    InternalError:
-      description: Internal error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    ValidationError:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+    SetEnvironmentVariablesRequest:
+      type: object
+      properties:
+        entries:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+              value:
+                type: string
+              description:
+                type: string
+            required:
+            - name
+            - value
+            additionalProperties: false
+          minItems: 1
+          maxItems: 500
+      required:
+      - entries
+      additionalProperties: false
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
-      description: API token (capy_xxxx). Generate at capy.ai/settings/tokens
+      bearerFormat: Capy API key
+      description: An API key created in Capy under Settings → API.

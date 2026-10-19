@@ -1,0 +1,720 @@
+openapi: 3.2.0
+info:
+  title: Capy Review Filters API
+  version: 1.0.0
+  description: Programmatic access to Capy's agent platform.
+servers:
+- url: https://api.capy.ai
+security:
+- bearerAuth: []
+tags:
+- name: reviewFilters
+paths:
+  /api/v1/review-filters/rules:
+    get:
+      tags:
+      - reviewFilters
+      operationId: reviewFilters.listRules
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewFilterRuleList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewFilterRuleListEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List rules
+    post:
+      tags:
+      - reviewFilters
+      operationId: reviewFilters.createRule
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewFilterRule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewFilterRuleEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewFilterRuleRequest'
+        required: true
+      summary: Create rule
+  /api/v1/review-filters/rules/{id}:
+    delete:
+      tags:
+      - reviewFilters
+      operationId: reviewFilters.deleteRule
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rfilt_
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewFilterDeleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewFilterDeletedEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Delete rule
+    patch:
+      tags:
+      - reviewFilters
+      operationId: reviewFilters.updateRule
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rfilt_
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewFilterRule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewFilterRuleEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewFilterRuleRequest'
+        required: true
+      summary: Update rule
+  /api/v1/review-filters/ignore-paths:
+    get:
+      tags:
+      - reviewFilters
+      operationId: reviewFilters.listIgnorePaths
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewIgnorePathsList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewIgnorePathsListEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List ignore paths
+    post:
+      tags:
+      - reviewFilters
+      operationId: reviewFilters.createIgnorePaths
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewIgnorePaths
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewIgnorePathsEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewIgnorePathsRequest'
+        required: true
+      summary: Create ignore paths
+  /api/v1/review-filters/ignore-paths/{id}:
+    delete:
+      tags:
+      - reviewFilters
+      operationId: reviewFilters.deleteIgnorePaths
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rpath_
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewFilterDeleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewFilterDeletedEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Delete ignore paths
+    patch:
+      tags:
+      - reviewFilters
+      operationId: reviewFilters.updateIgnorePaths
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rpath_
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: ReviewIgnorePaths
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewIgnorePathsEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewIgnorePathsRequest'
+        required: true
+      summary: Update ignore paths
+components:
+  schemas:
+    ReviewFilterDeletedEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+        deleted:
+          type: boolean
+      required:
+      - id
+      - deleted
+      additionalProperties: false
+    UpdateReviewFilterRuleRequest:
+      type: object
+      properties:
+        repo:
+          anyOf:
+          - type: string
+          - type: 'null'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewFilterCondition'
+      required:
+      - repo
+      - conditions
+      additionalProperties: false
+    CreateReviewFilterRuleRequest:
+      type: object
+      properties:
+        repo:
+          anyOf:
+          - type: string
+          - type: 'null'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewFilterCondition'
+      required:
+      - repo
+      - conditions
+      additionalProperties: false
+    ReviewIgnorePathsListEncoded:
+      type: object
+      properties:
+        ignorePaths:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewIgnorePathsEncoded'
+      required:
+      - ignorePaths
+      additionalProperties: false
+    ReviewFilterRuleListEncoded:
+      type: object
+      properties:
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewFilterRuleEncoded'
+      required:
+      - rules
+      additionalProperties: false
+    CreateReviewIgnorePathsRequest:
+      type: object
+      properties:
+        repo:
+          anyOf:
+          - type: string
+          - type: 'null'
+        patterns:
+          type: array
+          items:
+            type: string
+      required:
+      - repo
+      - patterns
+      additionalProperties: false
+    capy_RateLimitedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/RateLimited
+        retryAfterSeconds:
+          type: integer
+      required:
+      - _tag
+      - retryAfterSeconds
+      additionalProperties: false
+    ReviewFilterRuleEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rfilt_
+        repo:
+          anyOf:
+          - type: string
+          - type: 'null'
+        githubRepoId:
+          anyOf:
+          - anyOf:
+            - type: number
+            - type: string
+              enum:
+              - Infinity
+              - -Infinity
+              - NaN
+          - type: 'null'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewFilterCondition'
+        source:
+          type: string
+          enum:
+          - hand
+          - greptile
+        createdByUserId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdByName:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+      - id
+      - repo
+      - githubRepoId
+      - conditions
+      - source
+      - createdByUserId
+      - createdByName
+      - createdAt
+      - updatedAt
+      additionalProperties: false
+    ReviewIgnorePathsEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+          allOf:
+          - minLength: 32
+          - maxLength: 32
+          pattern: ^rpath_
+        repo:
+          anyOf:
+          - type: string
+          - type: 'null'
+        githubRepoId:
+          anyOf:
+          - anyOf:
+            - type: number
+            - type: string
+              enum:
+              - Infinity
+              - -Infinity
+              - NaN
+          - type: 'null'
+        patterns:
+          type: array
+          items:
+            type: string
+        source:
+          type: string
+          enum:
+          - hand
+          - greptile
+        createdByUserId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdByName:
+          anyOf:
+          - type: string
+          - type: 'null'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+      - id
+      - repo
+      - githubRepoId
+      - patterns
+      - source
+      - createdByUserId
+      - createdByName
+      - createdAt
+      - updatedAt
+      additionalProperties: false
+    ReviewFilterCondition:
+      type: object
+      properties:
+        field:
+          type: string
+          enum:
+          - label
+          - base_branch
+          - title_or_body
+          - author
+        not:
+          type: boolean
+        values:
+          type: array
+          items:
+            type: string
+      required:
+      - field
+      - not
+      - values
+      additionalProperties: false
+    capy_UnauthorizedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Unauthorized
+      required:
+      - _tag
+      additionalProperties: false
+    UpdateReviewIgnorePathsRequest:
+      type: object
+      properties:
+        repo:
+          anyOf:
+          - type: string
+          - type: 'null'
+        patterns:
+          type: array
+          items:
+            type: string
+      required:
+      - repo
+      - patterns
+      additionalProperties: false
+    capy_InvalidRequestEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/InvalidRequest
+        message:
+          type: string
+      required:
+      - _tag
+      - message
+      additionalProperties: false
+    capy_ForbiddenEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Forbidden
+      required:
+      - _tag
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Capy API key
+      description: An API key created in Capy under Settings → API.

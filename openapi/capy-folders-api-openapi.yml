@@ -1,0 +1,713 @@
+openapi: 3.2.0
+info:
+  title: Capy Folders API
+  version: 1.0.0
+  description: Programmatic access to Capy's agent platform.
+servers:
+- url: https://api.capy.ai
+security:
+- bearerAuth: []
+tags:
+- name: Folders
+paths:
+  /api/v1/folders:
+    get:
+      tags:
+      - Folders
+      operationId: folders.list
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: FolderList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FolderListEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: List
+  /api/v1/folders/{folderId}/threads:
+    get:
+      tags:
+      - Folders
+      operationId: folders.threads
+      parameters:
+      - name: folderId
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: after
+        in: query
+        schema:
+          type: string
+          pattern: ^-?\d{1,15}:.+
+        required: false
+      - name: limit
+        in: query
+        schema:
+          type: string
+          pattern: ^[+-]?\d*\.?\d+(?:[Ee][+-]?\d+)?$
+        required: false
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: FolderThreadPage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FolderThreadPage'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadOrganizationNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadOrganizationNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      summary: Threads
+    post:
+      tags:
+      - Folders
+      operationId: folders.file
+      parameters:
+      - name: folderId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: FileThreadsResult
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileThreadsResultEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadOrganizationNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadOrganizationNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileThreadsRequest'
+        required: true
+      summary: File
+    delete:
+      tags:
+      - Folders
+      operationId: folders.unfile
+      parameters:
+      - name: folderId
+        in: path
+        schema:
+          type: string
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: FileThreadsResult
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileThreadsResultEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '404':
+          description: capy/ThreadOrganizationNotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_ThreadOrganizationNotFoundEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileThreadsRequest'
+        required: true
+      summary: Unfile
+  /api/v1/threads/pin:
+    post:
+      tags:
+      - Folders
+      operationId: folders.pin
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: FileThreadsResult
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileThreadsResultEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinThreadsRequest'
+        required: true
+      summary: Pin
+  /api/v1/threads/unpin:
+    post:
+      tags:
+      - Folders
+      operationId: folders.unpin
+      parameters: []
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: FileThreadsResult
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileThreadsResultEncoded'
+        '400':
+          description: capy/InvalidRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_InvalidRequestEncoded'
+        '401':
+          description: capy/Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_UnauthorizedEncoded'
+        '403':
+          description: capy/Forbidden
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+                - $ref: '#/components/schemas/capy_ForbiddenEncoded'
+        '429':
+          description: capy/RateLimited
+          headers:
+            retry-after:
+              schema:
+                type: integer
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capy_RateLimitedEncoded'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinThreadsRequest'
+        required: true
+      summary: Unpin
+components:
+  schemas:
+    ThreadLinearIssue:
+      type: object
+      properties:
+        key:
+          type: string
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+      required:
+      - key
+      - url
+      additionalProperties: false
+    FolderListEncoded:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FolderEncoded'
+      required:
+      - items
+      additionalProperties: false
+    FileThreadsResultEncoded:
+      type: object
+      properties:
+        outcomes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThreadOutcomeEncoded'
+      required:
+      - outcomes
+      additionalProperties: false
+    capy_InvalidRequestEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/InvalidRequest
+        message:
+          type: string
+      required:
+      - _tag
+      - message
+      additionalProperties: false
+    ThreadCaptain:
+      type: object
+      properties:
+        jamId:
+          type: string
+        name:
+          type: string
+        avatar:
+          $ref: '#/components/schemas/CaptainAvatar'
+      required:
+      - jamId
+      - name
+      - avatar
+      additionalProperties: false
+    FileThreadsRequest:
+      type: object
+      properties:
+        threadIds:
+          type: array
+          items:
+            type: string
+      required:
+      - threadIds
+      additionalProperties: false
+    FolderEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+        kind:
+          type: string
+          enum:
+          - pinned
+          - custom
+        visibility:
+          type: string
+          enum:
+          - private
+          - shared
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+      - id
+      - name
+      - kind
+      - visibility
+      - createdAt
+      - updatedAt
+      additionalProperties: false
+    CaptainAvatar:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - preset
+          - emoji
+        value:
+          type: string
+        background:
+          type: string
+        image:
+          type: string
+      required:
+      - kind
+      - value
+      - background
+      additionalProperties: false
+    PinThreadsRequest:
+      type: object
+      properties:
+        threadIds:
+          type: array
+          items:
+            type: string
+        userId:
+          type: string
+      required:
+      - threadIds
+      additionalProperties: false
+    capy_RateLimitedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/RateLimited
+        retryAfterSeconds:
+          type: integer
+      required:
+      - _tag
+      - retryAfterSeconds
+      additionalProperties: false
+    capy_ThreadOrganizationNotFoundEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/ThreadOrganizationNotFound
+      required:
+      - _tag
+      additionalProperties: false
+    capy_UnauthorizedEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Unauthorized
+      required:
+      - _tag
+      additionalProperties: false
+    ThreadEncoded:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        authorId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        previousAuthorId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        titleCustom:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - working
+          - waiting
+          - idle
+          - failed
+          - archived
+        archived:
+          type: boolean
+        lastModelId:
+          anyOf:
+          - type: string
+          - type: 'null'
+        linearIssue:
+          anyOf:
+          - $ref: '#/components/schemas/ThreadLinearIssue'
+          - type: 'null'
+        pullRequestAuthor:
+          anyOf:
+          - type: string
+            enum:
+            - user
+            - capy
+          - type: 'null'
+          description: 'Who authors this thread''s pull requests on GitHub: `capy` for the Capy GitHub App, `user` for the thread''s acting human. Null means the acting human''s Git identity preference decides.'
+        usage:
+          $ref: '#/components/schemas/UsageTotalsEncoded'
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        lastActivityAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+        hasUnreads:
+          type: boolean
+        mentionCount:
+          type: integer
+        owed:
+          type: boolean
+        needsYou:
+          type: boolean
+        crewNeedsYou:
+          type: integer
+        participated:
+          type: boolean
+        crewMentionCount:
+          type: integer
+        captain:
+          $ref: '#/components/schemas/ThreadCaptain'
+        crewCount:
+          type: integer
+        member:
+          type: boolean
+        subscribed:
+          type: boolean
+        personal:
+          type: boolean
+        visibility:
+          type: string
+          enum:
+          - org
+          - private
+      required:
+      - id
+      - projectId
+      - authorId
+      - previousAuthorId
+      - title
+      - titleCustom
+      - status
+      - archived
+      - lastModelId
+      - linearIssue
+      - pullRequestAuthor
+      - usage
+      - createdAt
+      - updatedAt
+      - lastActivityAt
+      - hasUnreads
+      - mentionCount
+      - owed
+      - member
+      additionalProperties: false
+    capy_ForbiddenEncoded:
+      type: object
+      properties:
+        _tag:
+          type: string
+          enum:
+          - capy/Forbidden
+      required:
+      - _tag
+      additionalProperties: false
+    UsageTotalsEncoded:
+      type: object
+      properties:
+        llmCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        imageCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        vmCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+        totalCredits:
+          anyOf:
+          - type: number
+          - type: string
+            enum:
+            - Infinity
+            - -Infinity
+            - NaN
+      required:
+      - llmCredits
+      - imageCredits
+      - vmCredits
+      - totalCredits
+      additionalProperties: false
+    FolderThreadPage:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThreadEncoded'
+        cursor:
+          anyOf:
+          - type: string
+            pattern: ^-?\d{1,15}:.+
+          - type: 'null'
+      required:
+      - items
+      - cursor
+      additionalProperties: false
+    ThreadOutcomeEncoded:
+      type: object
+      properties:
+        threadId:
+          type: string
+        outcome:
+          type: string
+          enum:
+          - ok
+          - not_found
+          - not_allowed
+      required:
+      - threadId
+      - outcome
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Capy API key
+      description: An API key created in Capy under Settings → API.
