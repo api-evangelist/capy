@@ -239,6 +239,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Folders
+  tags_raw:
   - folders
   properties:
   - type: OpenAPI
@@ -265,6 +267,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Message
+  tags_raw:
   - messages
   properties:
   - type: OpenAPI
@@ -290,7 +294,8 @@ apis:
   description: The reviewFilters API from Capy — 4 operation(s) for reviewfilters.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
-  tags:
+  tags: []
+  tags_raw:
   - reviewFilters
   properties:
   - type: OpenAPI
@@ -316,7 +321,8 @@ apis:
   description: The reviewRules API from Capy — 2 operation(s) for reviewrules.
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
-  tags:
+  tags: []
+  tags_raw:
   - reviewRules
   properties:
   - type: OpenAPI
@@ -343,6 +349,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Reviews
+  tags_raw:
   - reviews
   properties:
   - type: OpenAPI
@@ -369,6 +377,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Streams
+  tags_raw:
   - streams
   properties:
   - type: OpenAPI
@@ -395,6 +405,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - Subagents
+  tags_raw:
   - subagents
   properties:
   - type: OpenAPI
@@ -421,6 +433,8 @@ apis:
   humanURL: https://docs.capy.ai/api-reference/overview
   baseURL: https://capy.ai/api/v1/
   tags:
+  - User
+  tags_raw:
   - users
   properties:
   - type: OpenAPI
