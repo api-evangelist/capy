@@ -64,6 +64,151 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Capy is a company surfaced as a portfolio company of crv and added to the API Evangelist network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the enrichment pipeline.
+Capy is an AI software-engineering platform that orchestrates a fleet of cloud coding agents inside the apps a team already uses (Slack, Linear, GitHub). Each task runs in its own isolated Ubuntu VM where a captain agent plans and build agents execute — writing code, running end-to-end browser tests, migrating codebases, generating docs, triaging and fixing bugs, and opening pull requests for review. Capy supports multiple frontier models (GPT, Claude, Grok, Gemini) and exposes a REST API (bearer capy_ token) plus scheduled and webhook-triggered automations. Backed by CRV; SOC 2 Type II certified.
 
-Backed by: crv — https://capy.ai/
+**Areas:** Company · Artificial Intelligence · AI Coding Agents · Software Engineering · Developer Tools · Automation · Code Review · DevOps
+
+## Capy on APIs.io
+
+Everything profiled for Capy is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/capy/](https://apis.io/providers/capy/)** — or go straight to one of the APIs or properties below.
+
+### APIs (12)
+
+- [Capy Automations API](https://apis.io/apis/capy/capy-automations-api/) — The automations API from Capy — 3 operation(s) for automations.
+- [Capy Browser Snapshots API](https://apis.io/apis/capy/capy-browser-snapshots-api/) — The browser-snapshots API from Capy — 2 operation(s) for browser-snapshots.
+- [Capy Environment Variables API](https://apis.io/apis/capy/capy-environment-variables-api/) — The environment-variables API from Capy — 2 operation(s) for environment-variables.
+- [Capy Models API](https://apis.io/apis/capy/capy-models-api/) — The models API from Capy — 1 operation(s) for models.
+- [Capy Projects API](https://apis.io/apis/capy/capy-projects-api/) — The projects API from Capy — 2 operation(s) for projects.
+- [Capy Sessions API](https://apis.io/apis/capy/capy-sessions-api/) — The sessions API from Capy — 1 operation(s) for sessions.
+- [Capy Setup API](https://apis.io/apis/capy/capy-setup-api/) — The setup API from Capy — 1 operation(s) for setup.
+- [Capy Snapshots API](https://apis.io/apis/capy/capy-snapshots-api/) — The snapshots API from Capy — 1 operation(s) for snapshots.
+- [Capy Tags API](https://apis.io/apis/capy/capy-tags-api/) — The tags API from Capy — 2 operation(s) for tags.
+- [Capy Tasks API](https://apis.io/apis/capy/capy-tasks-api/) — The tasks API from Capy — 2 operation(s) for tasks.
+- [Capy Threads API](https://apis.io/apis/capy/capy-threads-api/) — The threads API from Capy — 8 operation(s) for threads.
+- [Capy Usage API](https://apis.io/apis/capy/capy-usage-api/) — The usage API from Capy — 1 operation(s) for usage.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [capy](https://apis.io/servers/capy/capy/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Capy Agentic Access](https://apis.io/agentic-access/capy/capy-agentic-access/)
+
+#### Collections (12)
+
+Postman and Open Collection request collections.
+
+- [Capy automations API](https://apis.io/collections/capy/open-capy-automations-api/)
+- [Capy automations browser-snapshots API](https://apis.io/collections/capy/open-capy-browser-snapshots-api/)
+- [Capy automations environment-variables API](https://apis.io/collections/capy/open-capy-environment-variables-api/)
+- [Capy automations models API](https://apis.io/collections/capy/open-capy-models-api/)
+- [Capy automations projects API](https://apis.io/collections/capy/open-capy-projects-api/)
+- [Capy automations sessions API](https://apis.io/collections/capy/open-capy-sessions-api/)
+- [Capy automations setup API](https://apis.io/collections/capy/open-capy-setup-api/)
+- [Capy automations snapshots API](https://apis.io/collections/capy/open-capy-snapshots-api/)
+- [Capy automations tags API](https://apis.io/collections/capy/open-capy-tags-api/)
+- [Capy automations tasks API](https://apis.io/collections/capy/open-capy-tasks-api/)
+- [Capy automations threads API](https://apis.io/collections/capy/open-capy-threads-api/)
+- [Capy automations usage API](https://apis.io/collections/capy/open-capy-usage-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Capy Openapi Overlay](https://apis.io/overlays/capy/capy-openapi-overlay/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Capy Authentication](https://apis.io/security/capy/capy-authentication/)
+- [Capy Domain Security](https://apis.io/security/capy/capy-domain-security/)
+- [Capy Trust Center](https://apis.io/security/capy/capy-trust-center/)
+- [Capy Vulnerability Disclosure](https://apis.io/security/capy/capy-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Capy Plans Pricing](https://apis.io/plans/capy/capy-plans-pricing/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://capy.ai/)
+- [Documentation](https://docs.capy.ai)
+- [Getting started](https://docs.capy.ai/quickstart)
+- [API reference](https://docs.capy.ai/api-reference/overview)
+- [Pricing](https://capy.ai/pricing)
+- [Sign up](https://capy.ai/sign-up)
+- [Support](https://docs.capy.ai/support)
+- [Blog](https://capy.ai/blog)
+- [Security](https://capy.ai/security)
+- [Compliance](https://trust.capy.ai)
+- [Terms of service](https://capy.ai/terms-of-service)
+- [Privacy policy](https://capy.ai/privacy-policy)
+
+## API Evangelist rating
+
+**Kin Score 54.7** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 47.1 |
+| Contract governance | 18.2 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 58.9 |
+| Access clarity | 84.2 |
+
+**Agent readiness 37.2** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | verified |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 28.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/capy/](https://apis.io/providers/capy/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Capy: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/capy/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
